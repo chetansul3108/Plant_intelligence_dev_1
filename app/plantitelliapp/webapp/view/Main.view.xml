@@ -1,0 +1,79 @@
+<mvc:View
+controllerName="plant_intelligence_dev.controller.Main"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m">
+
+
+<App>
+
+    <Page title="Sales Orders In Transit">
+
+        <content>
+
+            <Button
+                text="Load Data"
+                type="Emphasized"
+                press=".onLoadData" />
+
+            <Table
+                id="idTable"
+                inset="false"
+                items="{/}">
+
+                <columns>
+
+                    <Column>
+                        <Text text="Sales Order" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Item" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Material" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Plant" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Transit Status" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Delivery Doc" />
+                    </Column>
+
+                </columns>
+
+                <items>
+
+                    <ColumnListItem>
+
+                        <cells>
+
+                            <Text text="{SalesOrder}" />
+                            <Text text="{SalesOrderItem}" />
+                            <Text text="{Material}" />
+                            <Text text="{ProductionPlant}" />
+                            <Text text="{InTransitStatus}" />
+                            <Text text="{DeliveryDocument}" />
+
+                        </cells>
+
+                    </ColumnListItem>
+
+                </items>
+
+            </Table>
+
+        </content>
+
+    </Page>
+
+</App>
+
+
+</mvc:View>

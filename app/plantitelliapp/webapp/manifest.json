@@ -1,0 +1,20 @@
+{
+  "sap.app": {
+    "id": "plant_intelligence_dev",
+    "type": "application"
+  },
+
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "plant_intelligence_dev.view.Main",
+      "type": "XML",
+      "async": true
+    },
+
+    "dependencies": {
+      "libs": {
+        "sap.m": {}
+      }
+    }
+  }
+}
