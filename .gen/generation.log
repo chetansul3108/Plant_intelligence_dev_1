@@ -1,0 +1,32 @@
+n Starting CAP Project Generator...
+Using @sap/cds-dk [9.9.1] from /extbin/globals/bun/global/install/node_modules/@sap/cds-dk
+Using @sap/generator-cap-project [2.0.6] from [/extbin/globals/bun/global/install/node_modules/@sap/generator-cap-project]
+Using root path [/home/user/projects]
+
+Creating project with destination, mta, nodejs, pipeline, xsuaa
+
+Adding facet: nodejs
+Adding facet: mta
+Adding facet: xsuaa
+Adding facet: destination
+Adding facet: pipeline
+
+Successfully initialized CAP project
+Continue with: code plant_intelli_2 
+for information on project "Piper" and its pipelines see https://www.project-piper.io/
+
+
+Installing dependencies...
+
+added 257 packages, and audited 258 packages in 3s
+
+39 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+Finished installing dependencies
+
+Done setting up project plant_intelli_2
+Project is ready to use
+
