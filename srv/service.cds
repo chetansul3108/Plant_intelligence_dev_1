@@ -1,16 +1,86 @@
-service PlantService {
+using { cuid } from '@sap/cds/common';
 
-    action getTransitData() returns many TransitData;
+@path: '/transit-service'
+service TransitService {
 
-    type TransitData {
-        SalesOrder              : String;
-        SalesOrderItem          : String;
-        Material                : String;
-        ProductionPlant         : String;
-        DeliveryStatus          : String;
-        InTransitStatus         : String;
-        DeliveryDocument        : String;
-        TransitDelayDays        : Integer;
+    action getSalesOrdersInTransit() returns array of SalesOrdersInTransitItem;
+    action getOnTimeDelivery() returns array of OnTimeDeliveryItem;
+    action getStockShortage() returns array of StockShortageItem;
+    action getPlannedOrderSchedule() returns array of PlannedOrderItem;
+    action getSalesToPayment() returns array of SalesToPaymentItem;
+    action getMaterialVH() returns array of MaterialVHItem;
+    action getShippingPointVH() returns array of ShippingPointVHItem;
+    action getCustomerVH() returns array of CustomerVHItem;
+
+    type SalesOrdersInTransitItem {
+        SalesOrder    : String;
+        Delivery      : String;
+        Shipment      : String;
+        Carrier       : String;
+        Route         : String;
+        Customer      : String;
+        DispatchDate  : String;
+        ETA           : String;
+        CurrentStatus : String;
     }
 
+    type OnTimeDeliveryItem {
+        SalesOrder           : String;
+        Delivery             : String;
+        Customer             : String;
+        Material             : String;
+        PlannedDeliveryDate  : String;
+        ActualGIDeliveryDate : String;
+        Quantity             : String;
+        Plant                : String;
+        ShippingPoint        : String;
+    }
+
+    type StockShortageItem {
+        Material        : String;
+        Plant           : String;
+        StorageLocation : String;
+        AvailableQty    : String;
+        RequirementQty  : String;
+        ShortageQty     : String;
+        RequirementDate : String;
+        MRPController   : String;
+    }
+
+    type PlannedOrderItem {
+        PlannedOrder    : String;
+        Material        : String;
+        Plant           : String;
+        BasicStartDate  : String;
+        BasicFinishDate : String;
+        ScheduledDate   : String;
+        Quantity        : String;
+        Status          : String;
+    }
+
+    type SalesToPaymentItem {
+        SalesOrder      : String;
+        BillingDocument : String;
+        InvoiceDate     : String;
+        PaymentStatus   : String;
+        NetAmount       : String;
+        Customer        : String;
+        DueDate         : String;
+        ClearingDate    : String;
+    }
+
+    type MaterialVHItem {
+        Material            : String;
+        MaterialDescription : String;
+    }
+
+    type ShippingPointVHItem {
+        ShippingPoint            : String;
+        ShippingPointDescription : String;
+    }
+
+    type CustomerVHItem {
+        Customer     : String;
+        CustomerName : String;
+    }
 }

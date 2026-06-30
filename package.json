@@ -20,14 +20,6 @@
     "requires": {
       "[production]": {
         "auth": "xsuaa"
-      },
-      "destinations": true,
-      "SalesOrdersInTransit": {
-        "kind": "odata-v2",
-        "credentials": {
-          "destination": "SALESORDERSINTRANSIT",
-          "path": "/sap/opu/odata/sap/ZI_SALESORDERSINTRANSIT_CDS"
-        }
       }
     }
   }
