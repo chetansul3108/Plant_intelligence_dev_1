@@ -27,12 +27,23 @@ function formatSapDate(value) {
     return `${yyyy}-${mm}-${dd}`;
 }
 
-async function fetchRaw(serviceName, entityName) {
-    const url = `${BASE_URL}/${serviceName}/${entityName}?$format=json`;
+async function fetchRaw(serviceName, entityName, top = 100) {
+    const url = `${BASE_URL}/${serviceName}/${entityName}?$top=${top}&$format=json`;
     console.log('[CAP] Fetching:', url);
 
-    const response = await axiosInstance.get(url);
-    return response?.data?.d?.results || [];
+    try {
+        const response = await axiosInstance.get(url);
+        return response?.data?.d?.results || [];
+    } catch (err) {
+        console.error('[CAP] URL failed:', url);
+        if (err.response) {
+            console.error('[CAP] Status:', err.response.status);
+            console.error('[CAP] Data:', JSON.stringify(err.response.data, null, 2));
+        } else {
+            console.error('[CAP] Message:', err.message);
+        }
+        throw err;
+    }
 }
 
 function handleError(actionName, err) {
@@ -158,52 +169,40 @@ module.exports = cds.service.impl(async function () {
         }
     });
 
-    this.on('getMaterialVH', async () => {
-        try {
-            const rows = await fetchRaw(
-                'ZI_SALESORDERSINTRANSIT_CDS',
-                'I_MaterialStdVH'
-            );
+this.on('getMaterialVH', async () => {
+    try {
+        const rows = await fetchRaw('ZI_SALESORDERSINTRANSIT_CDS', 'I_MaterialStdVH', 50);
+        return rows.map(item => ({
+            Material: item.Material ?? '',
+            MaterialDescription: item.Material_Text ?? ''
+        }));
+    } catch (err) {
+        handleError('getMaterialVH', err);
+    }
+});
 
-            return rows.map(item => ({
-                Material: item.Material ?? '',
-                MaterialDescription: item.Material_Text ?? ''
-            }));
-        } catch (err) {
-            handleError('getMaterialVH', err);
-        }
-    });
+this.on('getShippingPointVH', async () => {
+    try {
+        const rows = await fetchRaw('ZI_SALESORDERSINTRANSIT_CDS', 'I_ShippingPointStdVH', 50);
+        return rows.map(item => ({
+            ShippingPoint: item.ShippingPoint ?? '',
+            ShippingPointDescription: item.ShippingPointName || item.ShippingPoint_Text || ''
+        }));
+    } catch (err) {
+        handleError('getShippingPointVH', err);
+    }
+});
 
-    this.on('getShippingPointVH', async () => {
-        try {
-            const rows = await fetchRaw(
-                'ZI_SALESORDERSINTRANSIT_CDS',
-                'I_ShippingPointStdVH'
-            );
-
-            return rows.map(item => ({
-                ShippingPoint: item.ShippingPoint ?? '',
-                ShippingPointDescription: item.ShippingPointName || item.ShippingPoint_Text || ''
-            }));
-        } catch (err) {
-            handleError('getShippingPointVH', err);
-        }
-    });
-
-    this.on('getCustomerVH', async () => {
-        try {
-            const rows = await fetchRaw(
-                'ZC_ESJI_SALESTOPAY_CDS',
-                'I_Customer_VH'
-            );
-
-            return rows.map(item => ({
-                Customer: item.Customer ?? '',
-                CustomerName: item.CustomerName || item.BusinessPartnerName1 || ''
-            }));
-        } catch (err) {
-            handleError('getCustomerVH', err);
-        }
-    });
+this.on('getCustomerVH', async () => {
+    try {
+        const rows = await fetchRaw('ZC_ESJI_SALESTOPAY_CDS', 'I_Customer_VH', 50);
+        return rows.map(item => ({
+            Customer: item.Customer ?? '',
+            CustomerName: item.CustomerName || item.BusinessPartnerName1 || ''
+        }));
+    } catch (err) {
+        handleError('getCustomerVH', err);
+    }
+});
 
 });
