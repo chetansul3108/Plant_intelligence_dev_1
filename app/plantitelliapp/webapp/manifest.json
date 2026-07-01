@@ -15,6 +15,14 @@
       "libs": {
         "sap.m": {}
       }
+    },
+
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     }
   }
 }
