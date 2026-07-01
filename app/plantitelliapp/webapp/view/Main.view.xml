@@ -2,333 +2,69 @@
     controllerName="plant_intelligence_dev.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core"
     displayBlock="true">
 
     <App>
-        <Page title="Plant Intelligence Dashboard" showHeader="true">
+        <Page title="Plant Intelligence Dashboard" class="kpiPage">
             <content>
+                <l:Grid
+                    defaultSpan="XL4 L4 M6 S12"
+                    vSpacing="1"
+                    hSpacing="1"
+                    class="kpiGrid"
+                    content="{dashboardModel>/cards}">
 
-                <IconTabBar id="idTabBar" expandable="false" stretchContentHeight="true">
+                    <Panel class="kpiTile {dashboardModel>accentClass}">
+                        <content>
+                            <VBox class="kpiTileInner">
+                                <HBox justifyContent="SpaceBetween" alignItems="Start" class="kpiTopRow">
+                                    <VBox class="kpiIconBox {dashboardModel>iconClass}" />
 
-                    <items>
-                        <!-- ── Tab 1: Sales Orders In Transit ─────────────────── -->
-                        <IconTabFilter text="In Transit" icon="sap-icon://shipping-status">
-                            <content>
-                                <Toolbar>
-                                    <Title text="Sales Orders In Transit" />
-                                    <ToolbarSpacer />
-                                    <Button
-                                        text="Load Data"
-                                        type="Emphasized"
-                                        icon="sap-icon://download"
-                                        press=".onLoadTransit" />
-                                </Toolbar>
-                                <Table
-                                    id="transitTable"
-                                    inset="false"
-                                    items="{transitModel>/}"
-                                    noDataText="Press 'Load Data' to fetch records">
-                                    <columns>
-                                        <Column><Text text="Sales Order" /></Column>
-                                        <Column><Text text="Delivery" /></Column>
-                                        <Column><Text text="Shipment" /></Column>
-                                        <Column><Text text="Carrier" /></Column>
-                                        <Column><Text text="Customer" /></Column>
-                                        <Column><Text text="Dispatch Date" /></Column>
-                                        <Column><Text text="ETA" /></Column>
-                                        <Column><Text text="Status" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{transitModel>SalesOrder}" />
-                                                <Text text="{transitModel>Delivery}" />
-                                                <Text text="{transitModel>Shipment}" />
-                                                <Text text="{transitModel>Carrier}" />
-                                                <Text text="{transitModel>Customer}" />
-                                                <Text text="{transitModel>DispatchDate}" />
-                                                <Text text="{transitModel>ETA}" />
-                                                <Text text="{transitModel>CurrentStatus}" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </content>
-                        </IconTabFilter>
+                                    <ObjectStatus
+                                        text="{dashboardModel>statusText}"
+                                        state="{dashboardModel>statusState}"
+                                        inverted="true"
+                                        class="kpiStatusBadge" />
+                                </HBox>
 
-                        <!-- ── Tab 2: On-Time Delivery ────────────────────── -->
-                        <IconTabFilter text="On-Time Delivery" icon="sap-icon://calendar">
-                            <content>
-                                <Toolbar>
-                                    <Title text="On-Time Delivery Raw Data" />
-                                    <ToolbarSpacer />
-                                    <Button
-                                        text="Load Data"
-                                        type="Emphasized"
-                                        icon="sap-icon://download"
-                                        press=".onLoadOnTimeDelivery" />
-                                </Toolbar>
-                                <Table
-                                    id="onTimeTable"
-                                    inset="false"
-                                    items="{onTimeModel>/}"
-                                    noDataText="Press 'Load Data' to fetch records">
-                                    <columns>
-                                        <Column><Text text="Sales Order" /></Column>
-                                        <Column><Text text="Delivery" /></Column>
-                                        <Column><Text text="Customer" /></Column>
-                                        <Column><Text text="Material" /></Column>
-                                        <Column><Text text="Planned Delivery Date" /></Column>
-                                        <Column><Text text="Actual GI Date" /></Column>
-                                        <Column><Text text="Quantity" /></Column>
-                                        <Column><Text text="Plant" /></Column>
-                                        <Column><Text text="Shipping Point" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{onTimeModel>SalesOrder}" />
-                                                <Text text="{onTimeModel>Delivery}" />
-                                                <Text text="{onTimeModel>Customer}" />
-                                                <Text text="{onTimeModel>Material}" />
-                                                <Text text="{onTimeModel>PlannedDeliveryDate}" />
-                                                <Text text="{onTimeModel>ActualGIDeliveryDate}" />
-                                                <Text text="{onTimeModel>Quantity}" />
-                                                <Text text="{onTimeModel>Plant}" />
-                                                <Text text="{onTimeModel>ShippingPoint}" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </content>
-                        </IconTabFilter>
+                                <VBox class="kpiBodyBlock">
+                                    <Text text="{dashboardModel>title}" class="kpiTitle" />
 
-                        <!-- ── Tab 3: Stock Shortage ──────────────────────── -->
-                        <IconTabFilter text="Stock Shortage" icon="sap-icon://alert">
-                            <content>
-                                <Toolbar>
-                                    <Title text="Stock Shortage Analysis" />
-                                    <ToolbarSpacer />
-                                    <Button
-                                        text="Load Data"
-                                        type="Emphasized"
-                                        icon="sap-icon://download"
-                                        press=".onLoadStockShortage" />
-                                </Toolbar>
-                                <Table
-                                    id="stockTable"
-                                    inset="false"
-                                    items="{stockShortageModel>/}"
-                                    noDataText="Press 'Load Data' to fetch records">
-                                    <columns>
-                                        <Column><Text text="Material" /></Column>
-                                        <Column><Text text="Plant" /></Column>
-                                        <Column><Text text="Storage Location" /></Column>
-                                        <Column><Text text="Available Qty" /></Column>
-                                        <Column><Text text="Requirement Qty" /></Column>
-                                        <Column><Text text="Shortage Qty" /></Column>
-                                        <Column><Text text="Requirement Date" /></Column>
-                                        <Column><Text text="MRP Controller" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{stockShortageModel>Material}" />
-                                                <Text text="{stockShortageModel>Plant}" />
-                                                <Text text="{stockShortageModel>StorageLocation}" />
-                                                <Text text="{stockShortageModel>AvailableQty}" />
-                                                <Text text="{stockShortageModel>RequirementQty}" />
-                                                <Text text="{stockShortageModel>ShortageQty}" />
-                                                <Text text="{stockShortageModel>RequirementDate}" />
-                                                <Text text="{stockShortageModel>MRPController}" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </content>
-                        </IconTabFilter>
+                                    <HBox alignItems="End" class="kpiValueRow">
+                                        <Text text="{dashboardModel>value}" class="kpiValue" />
+                                        <Text text="{dashboardModel>unit}" class="kpiUnit" />
+                                    </HBox>
 
-                        <!-- ── Tab 4: Planned Order Schedule ─────────────── -->
-                        <IconTabFilter text="Planned Orders" icon="sap-icon://factory">
-                            <content>
-                                <Toolbar>
-                                    <Title text="Planned Order Schedule" />
-                                    <ToolbarSpacer />
-                                    <Button
-                                        text="Load Data"
-                                        type="Emphasized"
-                                        icon="sap-icon://download"
-                                        press=".onLoadPlannedOrders" />
-                                </Toolbar>
-                                <Table
-                                    id="plannedTable"
-                                    inset="false"
-                                    items="{plannedOrderModel>/}"
-                                    noDataText="Press 'Load Data' to fetch records">
-                                    <columns>
-                                        <Column><Text text="Planned Order" /></Column>
-                                        <Column><Text text="Material" /></Column>
-                                        <Column><Text text="Plant" /></Column>
-                                        <Column><Text text="Basic Start Date" /></Column>
-                                        <Column><Text text="Basic Finish Date" /></Column>
-                                        <Column><Text text="Scheduled Date" /></Column>
-                                        <Column><Text text="Quantity" /></Column>
-                                        <Column><Text text="Status" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{plannedOrderModel>PlannedOrder}" />
-                                                <Text text="{plannedOrderModel>Material}" />
-                                                <Text text="{plannedOrderModel>Plant}" />
-                                                <Text text="{plannedOrderModel>BasicStartDate}" />
-                                                <Text text="{plannedOrderModel>BasicFinishDate}" />
-                                                <Text text="{plannedOrderModel>ScheduledDate}" />
-                                                <Text text="{plannedOrderModel>Quantity}" />
-                                                <Text text="{plannedOrderModel>Status}" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </content>
-                        </IconTabFilter>
-
-                        <!-- ── Tab 5: Sales To Payment ────────────────────── -->
-                        <IconTabFilter text="Sales to Pay" icon="sap-icon://money-bills">
-                            <content>
-                                <Toolbar>
-                                    <Title text="Sales To Payment Analytics" />
-                                    <ToolbarSpacer />
-                                    <Button
-                                        text="Load Data"
-                                        type="Emphasized"
-                                        icon="sap-icon://download"
-                                        press=".onLoadSalesToPayment" />
-                                </Toolbar>
-                                <Table
-                                    id="salesToPayTable"
-                                    inset="false"
-                                    items="{salesToPaymentModel>/}"
-                                    noDataText="Press 'Load Data' to fetch records">
-                                    <columns>
-                                        <Column><Text text="Sales Order" /></Column>
-                                        <Column><Text text="Billing Document" /></Column>
-                                        <Column><Text text="Invoice Date" /></Column>
-                                        <Column><Text text="Payment Status" /></Column>
-                                        <Column><Text text="Net Amount" /></Column>
-                                        <Column><Text text="Customer" /></Column>
-                                        <Column><Text text="Due Date" /></Column>
-                                        <Column><Text text="Clearing Date" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{salesToPaymentModel>SalesOrder}" />
-                                                <Text text="{salesToPaymentModel>BillingDocument}" />
-                                                <Text text="{salesToPaymentModel>InvoiceDate}" />
-                                                <Text text="{salesToPaymentModel>PaymentStatus}" />
-                                                <Text text="{salesToPaymentModel>NetAmount}" />
-                                                <Text text="{salesToPaymentModel>Customer}" />
-                                                <Text text="{salesToPaymentModel>DueDate}" />
-                                                <Text text="{salesToPaymentModel>ClearingDate}" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </content>
-                        </IconTabFilter>
-
-                        <!-- ── Tab 6: Value Helps ─────────────────────────── -->
-                        <IconTabFilter text="Value Helps" icon="sap-icon://value-help">
-                            <content>
-                                <VBox class="sapUiSmallMargin">
-
-                                    <Toolbar>
-                                        <Title text="Material Value Help" />
-                                        <ToolbarSpacer />
-                                        <Button text="Load" type="Emphasized" press=".onLoadMaterialVH" />
-                                    </Toolbar>
-                                    <Table
-                                        id="materialVHTable"
-                                        inset="false"
-                                        items="{materialVHModel>/}"
-                                        noDataText="Press 'Load' to fetch">
-                                        <columns>
-                                            <Column><Text text="Material" /></Column>
-                                            <Column><Text text="Description" /></Column>
-                                        </columns>
-                                        <items>
-                                            <ColumnListItem>
-                                                <cells>
-                                                    <Text text="{materialVHModel>Material}" />
-                                                    <Text text="{materialVHModel>MaterialDescription}" />
-                                                </cells>
-                                            </ColumnListItem>
-                                        </items>
-                                    </Table>
-
-                                    <core:HTML content="&lt;hr style='margin:1rem 0'/&gt;" />
-
-                                    <Toolbar>
-                                        <Title text="Shipping Point Value Help" />
-                                        <ToolbarSpacer />
-                                        <Button text="Load" type="Emphasized" press=".onLoadShippingPointVH" />
-                                    </Toolbar>
-                                    <Table
-                                        id="shippingVHTable"
-                                        inset="false"
-                                        items="{shippingPointVHModel>/}"
-                                        noDataText="Press 'Load' to fetch">
-                                        <columns>
-                                            <Column><Text text="Shipping Point" /></Column>
-                                            <Column><Text text="Description" /></Column>
-                                        </columns>
-                                        <items>
-                                            <ColumnListItem>
-                                                <cells>
-                                                    <Text text="{shippingPointVHModel>ShippingPoint}" />
-                                                    <Text text="{shippingPointVHModel>ShippingPointDescription}" />
-                                                </cells>
-                                            </ColumnListItem>
-                                        </items>
-                                    </Table>
-
-                                    <core:HTML content="&lt;hr style='margin:1rem 0'/&gt;" />
-
-                                    <Toolbar>
-                                        <Title text="Customer Value Help" />
-                                        <ToolbarSpacer />
-                                        <Button text="Load" type="Emphasized" press=".onLoadCustomerVH" />
-                                    </Toolbar>
-                                    <Table
-                                        id="customerVHTable"
-                                        inset="false"
-                                        items="{customerVHModel>/}"
-                                        noDataText="Press 'Load' to fetch">
-                                        <columns>
-                                            <Column><Text text="Customer" /></Column>
-                                            <Column><Text text="Name" /></Column>
-                                        </columns>
-                                        <items>
-                                            <ColumnListItem>
-                                                <cells>
-                                                    <Text text="{customerVHModel>Customer}" />
-                                                    <Text text="{customerVHModel>CustomerName}" />
-                                                </cells>
-                                            </ColumnListItem>
-                                        </items>
-                                    </Table>
-
+                                    <Text
+                                        text="{dashboardModel>delta}"
+                                        class="kpiDeltaText {dashboardModel>deltaClass}" />
                                 </VBox>
-                            </content>
-                        </IconTabFilter>
 
-                    </items>
-                </IconTabBar>
+                                <VBox class="kpiChartArea {dashboardModel>chartClass}" />
 
+                                <HBox justifyContent="SpaceBetween" class="kpiFooterRow">
+                                    <Text text="{dashboardModel>footerLeft}" class="kpiFooterLeft" />
+                                    <Text text="{dashboardModel>footerRight}" class="kpiFooterRight" />
+                                </HBox>
+
+                                <HBox justifyContent="End" class="kpiActionRow">
+    <Button
+        text="Load Data"
+        type="Transparent"
+        press=".onCardPress"
+        class="kpiActionButton">
+        <customData>
+            <core:CustomData key="cardKey" value="{dashboardModel>key}" />
+        </customData>
+    </Button>
+</HBox>
+                            </VBox>
+                        </content>
+                    </Panel>
+                </l:Grid>
             </content>
         </Page>
     </App>
-
 </mvc:View>

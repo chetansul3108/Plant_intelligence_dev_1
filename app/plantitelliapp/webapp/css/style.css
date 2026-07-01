@@ -1,0 +1,203 @@
+.kpiPage,
+.kpiPage .sapMPageCont,
+.kpiPage .sapMPageEnableScrolling {
+    background: #eef2f5 !important;
+}
+
+.kpiGrid {
+    padding: 1rem 1.1rem 1.2rem !important;
+}
+
+.kpiGrid .sapUiRespGridSpanXL4,
+.kpiGrid .sapUiRespGridSpanL4,
+.kpiGrid .sapUiRespGridSpanM6,
+.kpiGrid .sapUiRespGridSpanS12 {
+    padding: 0.45rem !important;
+}
+
+.kpiTile {
+    position: relative;
+    min-height: 310px;
+    border-radius: 28px !important;
+    border: 1px solid #dde3e8 !important;
+    border-top-width: 4px !important;
+    background: #f7f8fa !important;
+    box-shadow: none !important;
+    overflow: hidden;
+}
+
+.kpiTile .sapMPanelContent {
+    background: transparent !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+}
+
+.kpiTileInner {
+    position: relative;
+    min-height: 310px;
+    padding: 1.3rem 1.45rem 1.15rem;
+}
+
+.accentGreen { border-top-color: #22aa7c !important; }
+.accentAmber { border-top-color: #de9c17 !important; }
+.accentRed { border-top-color: #df4a4a !important; }
+.accentBlue { border-top-color: #4d84e8 !important; }
+
+.kpiTopRow {
+    margin-bottom: 0.95rem;
+}
+
+.kpiIconBox {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+}
+
+.iconGreen { background: #cdeedc; }
+.iconAmber { background: #f3e7b7; }
+.iconRed { background: #efd6d6; }
+.iconBlue { background: #d8e5f8; }
+
+.kpiStatusBadge {
+    border-radius: 999px !important;
+}
+
+.kpiBodyBlock {
+    margin-bottom: 1rem;
+}
+
+.kpiTitle {
+    color: #99a4b5;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.55rem;
+}
+
+.kpiValueRow {
+    gap: 0.15rem;
+    margin-bottom: 0.45rem;
+}
+
+.kpiValue {
+    font-size: 3.3rem;
+    line-height: 1;
+    font-weight: 700;
+    color: #0f1830;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.kpiUnit {
+    font-size: 1.35rem;
+    color: #5f6e83;
+    font-family: Georgia, "Times New Roman", serif;
+    padding-bottom: 0.28rem;
+}
+
+.kpiDeltaText {
+    font-size: 0.98rem;
+    line-height: 1.35;
+    font-weight: 500;
+}
+
+.deltaGreen { color: #1a9d72; }
+.deltaAmber { color: #c48011; }
+.deltaRed { color: #cd4343; }
+
+.kpiChartArea {
+    height: 80px;
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+}
+
+.chartGreen {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 80'><path d='M0 60 C40 56,70 50,100 46 C130 42,150 50,190 45 C230 40,280 37,330 39 C360 40,380 38,400 37 L400 80 L0 80 Z' fill='rgba(31,157,116,0.10)'/><path d='M0 60 C40 56,70 50,100 46 C130 42,150 50,190 45 C230 40,280 37,330 39 C360 40,380 38,400 37' fill='none' stroke='%231f9d74' stroke-width='3'/></svg>");
+}
+
+.chartAmber {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 80'><path d='M0 65 C40 56,75 52,110 40 C150 28,190 27,225 34 C260 40,300 21,340 18 C360 17,380 24,400 22 L400 80 L0 80 Z' fill='rgba(208,124,15,0.10)'/><path d='M0 65 C40 56,75 52,110 40 C150 28,190 27,225 34 C260 40,300 21,340 18 C360 17,380 24,400 22' fill='none' stroke='%23d07c0f' stroke-width='3'/></svg>");
+}
+
+.chartRed {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 80'><path d='M0 72 C30 64,60 56,90 62 C130 70,170 48,210 42 C250 36,290 24,340 18 C365 15,385 14,400 13 L400 80 L0 80 Z' fill='rgba(207,50,50,0.10)'/><path d='M0 72 C30 64,60 56,90 62 C130 70,170 48,210 42 C250 36,290 24,340 18 C365 15,385 14,400 13' fill='none' stroke='%23cf3232' stroke-width='3'/></svg>");
+}
+
+.chartBlue {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 80'><path d='M0 72 C30 60,55 48,90 58 C120 66,150 45,200 38 C240 33,270 20,310 34 C340 44,360 20,400 22 L400 80 L0 80 Z' fill='rgba(51,106,214,0.10)'/><path d='M0 72 C30 60,55 48,90 58 C120 66,150 45,200 38 C240 33,270 20,310 34 C340 44,360 20,400 22' fill='none' stroke='%23336ad6' stroke-width='3'/></svg>");
+}
+
+.kpiFooterRow {
+    margin-top: 0.2rem;
+}
+
+.kpiFooterLeft,
+.kpiFooterRight {
+    font-size: 0.9rem;
+    color: #93a0b1;
+    line-height: 1.2;
+}
+
+.kpiFooterRight {
+    text-align: right;
+}
+
+.kpiActionRow {
+    margin-top: 0.55rem;
+}
+
+.kpiActionButton {
+    align-self: flex-end;
+}
+
+.kpiActionButton .sapMBtnInner {
+    background: #eef4ff !important;
+    border: 1px solid #c9d9f7 !important;
+    border-radius: 999px !important;
+    min-height: 2rem !important;
+    padding: 0 0.75rem !important;
+}
+
+.kpiActionButton .sapMBtnContent {
+    color: #2f6edb !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.kpiActionButton:hover .sapMBtnInner {
+    background: #e3edff !important;
+}
+
+@media (max-width: 1200px) {
+    .kpiTile,
+    .kpiTileInner {
+        min-height: 285px;
+    }
+
+    .kpiValue {
+        font-size: 2.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .kpiTile,
+    .kpiTileInner {
+        min-height: 260px;
+    }
+
+    .kpiTileInner {
+        padding: 1.1rem 1.15rem 1rem;
+    }
+
+    .kpiValue {
+        font-size: 2.5rem;
+    }
+
+    .kpiChartArea {
+        height: 68px;
+        margin-top: 0.9rem;
+    }
+}
