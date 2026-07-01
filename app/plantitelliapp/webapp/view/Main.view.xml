@@ -7,8 +7,50 @@
     displayBlock="true">
 
     <App>
-        <Page title="Plant Intelligence Dashboard" class="kpiPage">
+        <Page title="" class="kpiPage">
+            <customHeader>
+
+                <Toolbar class="dashboardHeader" height="3.5rem">
+
+                    <core:Icon
+                        src="sap-icon://product"
+                        size="1.25rem"
+                        class="headerLogo"/>
+
+                    <Title
+                        text="Plant Intelligence"
+                        level="H3"
+                        class="titleMain"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="AI Copilot"
+                        icon="sap-icon://ai"
+                        type="Emphasized"
+                        class="aiCopilotButton"/>
+
+                    <Avatar
+                        displaySize="XS"
+                        class="profileAvatarBlank"/>
+
+                    <Avatar
+                        displaySize="XS"
+                        initials="SC"
+                        class="profileAvatarInitials"/>
+
+                </Toolbar>
+
+            </customHeader>
             <content>
+
+                <HBox justifyContent="SpaceBetween" alignItems="End" class="sectionHeaderRow">
+                    <VBox>
+                        <Title text="KPI Overview" level="H4" class="sectionTitle"/>
+                        <Text text="Real-time performance across all plants" class="sectionSubtitle"/>
+                    </VBox>
+                    <Text text="Updated 2 min ago" class="sectionUpdated"/>
+                </HBox>
                 <l:Grid
                     defaultSpan="XL4 L4 M6 S12"
                     vSpacing="1"
@@ -42,28 +84,15 @@
                                         class="kpiDeltaText {dashboardModel>deltaClass}" />
                                 </VBox>
 
-                                <VBox class="kpiChartArea {dashboardModel>chartClass}" />
-
                                 <HBox justifyContent="SpaceBetween" class="kpiFooterRow">
                                     <Text text="{dashboardModel>footerLeft}" class="kpiFooterLeft" />
                                     <Text text="{dashboardModel>footerRight}" class="kpiFooterRight" />
                                 </HBox>
-
-                                <HBox justifyContent="End" class="kpiActionRow">
-    <Button
-        text="Load Data"
-        type="Transparent"
-        press=".onCardPress"
-        class="kpiActionButton">
-        <customData>
-            <core:CustomData key="cardKey" value="{dashboardModel>key}" />
-        </customData>
-    </Button>
-</HBox>
                             </VBox>
                         </content>
                     </Panel>
                 </l:Grid>
+
             </content>
         </Page>
     </App>
