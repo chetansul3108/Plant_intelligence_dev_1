@@ -60,28 +60,27 @@ function handleError(actionName, err) {
 module.exports = cds.service.impl(async function () {
 
     this.on('getSalesOrdersInTransit', async () => {
-        try {
-            const rows = await fetchRaw(
-                'ZI_SALESORDERSINTRANSIT_CDS',
-                'ZI_SalesOrdersInTransit'
-            );
+    try {
+        const rows = await fetchRaw(
+            'ZI_SALESORDERSINTRANSIT_CDS',
+            'ZI_SalesOrdersInTransit'
+        );
 
-            return rows.map(item => ({
-                SalesOrder: item.SalesOrder ?? '',
-                Delivery: item.DeliveryDocument ?? '',
-                Shipment: item.SalesOrderItem ?? '',
-                Carrier: item.ShippingPoint ?? '',
-                Route: item.Route ?? '',
-                Customer: item.DestCountry ?? '',
-                DispatchDate: formatSapDate(item.ActualGoodsMovementDate || item.PlannedGIDate),
-                ETA: formatSapDate(item.ETA || item.PlannedGIDate),
-                RequestedDeliveryDate: formatSapDate(item.RequestedDeliveryDate),
-                CurrentStatus: item.InTransitStatus ?? ''
-            }));
-        } catch (err) {
-            handleError('getSalesOrdersInTransit', err);
-        }
-    });
+        return rows.map(item => ({
+            SalesOrder: item.SalesOrder ?? '',
+            Delivery: item.DeliveryDocument ?? '',
+            Shipment: item.SalesOrderItem ?? '',
+            Carrier: item.ShippingPoint ?? '',
+            Route: item.Route ?? '',
+            Customer: item.DestCountry ?? '',
+            ETA: formatSapDate(item.ETA || item.PlannedGIDate),
+            RequestedDeliveryDate: formatSapDate(item.RequestedDeliveryDate),
+            CurrentStatus: item.InTransitStatus ?? ''
+        }));
+    } catch (err) {
+        handleError('getSalesOrdersInTransit', err);
+    }
+});
 
     this.on('getOnTimeDelivery', async () => {
     try {
