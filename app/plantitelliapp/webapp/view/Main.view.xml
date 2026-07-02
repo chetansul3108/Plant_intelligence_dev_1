@@ -48,63 +48,118 @@
                     <Text text="Updated 2 min ago" class="sectionUpdated" />
                 </HBox>
 
-                <l:Grid
-                    defaultSpan="XL4 L4 M6 S12"
-                    vSpacing="0"
-                    hSpacing="0"
-                    class="kpiGrid"
-                    content="{dashboardModel>/cards}">
+                <HBox alignItems="Stretch" class="dashboardMainRow">
 
-                    <Panel class="kpiTile {dashboardModel>accentClass}">
-                        <layoutData>
-                            <l:GridData
-                                span="XL4 L4 M6 S12"
-                                linebreak="{dashboardModel>lineBreak}" />
-                        </layoutData>
+                    <!-- LEFT: KPI Cards -->
+                    <VBox class="kpiColumn">
+                        <l:Grid
+                            defaultSpan="XL6 L6 M6 S12"
+                            vSpacing="0"
+                            hSpacing="0"
+                            class="kpiGrid"
+                            content="{dashboardModel>/cards}">
 
-                        <content>
-                            <VBox class="kpiTileInner">
-                                <HBox justifyContent="SpaceBetween" alignItems="Start" class="kpiTopRow">
-                                    <VBox class="kpiIconBox {dashboardModel>iconClass}" />
+                            <VBox class="kpiCardWrapper">
+                                <customData>
+                                    <core:CustomData key="cardKey" value="{dashboardModel>key}" />
+                                </customData>
+                                <layoutData>
+                                    <l:GridData
+                                        span="XL6 L6 M6 S12"
+                                        linebreak="{dashboardModel>lineBreak}" />
+                                </layoutData>
 
-                                    <ObjectStatus
-                                        text="{dashboardModel>statusText}"
-                                        state="{dashboardModel>statusState}"
-                                        inverted="true"
-                                        class="kpiStatusBadge" />
-                                </HBox>
+                                <Panel class="kpiTile {dashboardModel>accentClass} {dashboardModel>selectedClass}">
+                                    <content>
+                                        <VBox class="kpiTileInner">
+                                            <HBox justifyContent="SpaceBetween" alignItems="Start" class="kpiTopRow">
+                                                <VBox class="kpiIconBox {dashboardModel>iconClass}" />
 
-                                <VBox class="kpiBodyBlock">
-                                    <Text
-                                        text="{dashboardModel>title}"
-                                        class="kpiTitle" />
+                                                <ObjectStatus
+                                                    text="{dashboardModel>statusText}"
+                                                    state="{dashboardModel>statusState}"
+                                                    inverted="true"
+                                                    class="kpiStatusBadge" />
+                                            </HBox>
 
-                                    <HBox alignItems="End" class="kpiValueRow">
-                                        <Text
-                                            text="{dashboardModel>value}"
-                                            class="kpiValue" />
-                                        <Text
-                                            text="{dashboardModel>unit}"
-                                            class="kpiUnit" />
-                                    </HBox>
+                                            <VBox class="kpiBodyBlock">
+                                                <Text
+                                                    text="{dashboardModel>title}"
+                                                    class="kpiTitle" />
 
-                                    <Text
-                                        text="{dashboardModel>delta}"
-                                        class="kpiDeltaText {dashboardModel>deltaClass}" />
-                                </VBox>
+                                                <HBox alignItems="End" class="kpiValueRow">
+                                                    <Text
+                                                        text="{dashboardModel>value}"
+                                                        class="kpiValue" />
+                                                    <Text
+                                                        text="{dashboardModel>unit}"
+                                                        class="kpiUnit" />
+                                                </HBox>
 
-                                <HBox justifyContent="SpaceBetween" class="kpiFooterRow">
-                                    <Text
-                                        text="{dashboardModel>footerLeft}"
-                                        class="kpiFooterLeft" />
-                                    <Text
-                                        text="{dashboardModel>footerRight}"
-                                        class="kpiFooterRight" />
-                                </HBox>
+                                                <Text
+                                                    text="{dashboardModel>delta}"
+                                                    class="kpiDeltaText {dashboardModel>deltaClass}" />
+                                            </VBox>
+
+                                            <HBox justifyContent="SpaceBetween" class="kpiFooterRow">
+                                                <Text
+                                                    text="{dashboardModel>footerLeft}"
+                                                    class="kpiFooterLeft" />
+                                                <Text
+                                                    text="{dashboardModel>footerRight}"
+                                                    class="kpiFooterRight" />
+                                            </HBox>
+                                        </VBox>
+                                    </content>
+                                </Panel>
                             </VBox>
-                        </content>
-                    </Panel>
-                </l:Grid>
+                        </l:Grid>
+                    </VBox>
+
+                    <!-- RIGHT: AI Summary -->
+                    <VBox class="aiSummaryColumn">
+                        <Panel class="aiSummaryPanel">
+                            <content>
+                                <VBox class="aiSummaryInner">
+
+                                    <HBox alignItems="Center" class="aiSummaryHeader">
+                                        <core:Icon src="sap-icon://ai" size="1.1rem" class="aiSummaryIcon" />
+                                        <Title text="AI Summary" level="H5" class="aiSummaryTitle" />
+                                    </HBox>
+                                    <Text text="{dashboardModel>/selectedInsight/subtitle}" class="aiSummarySubtitle" />
+
+                                    <VBox class="aiInsightItem" visible="{= ${dashboardModel>/selectedInsight/hasSelection} === true }">
+                                        <HBox alignItems="Center" class="aiInsightHeader">
+                                            <core:Icon
+                                                src="{dashboardModel>/selectedInsight/icon}"
+                                                class="aiInsightIcon {dashboardModel>/selectedInsight/iconClass}" />
+                                            <Text text="{dashboardModel>/selectedInsight/title}" class="aiInsightTitle" />
+                                        </HBox>
+                                        <Text text="{dashboardModel>/selectedInsight/text}" class="aiInsightText" />
+
+                                        <VBox class="aiRecommendBlock">
+                                            <Text text="RECOMMENDED ACTION" class="aiRecommendLabel" />
+                                            <Text text="{dashboardModel>/selectedInsight/recommendation}" class="aiRecommendText" />
+                                        </VBox>
+                                    </VBox>
+
+                                    <VBox class="aiEmptyState" visible="{= ${dashboardModel>/selectedInsight/hasSelection} !== true }">
+                                        <core:Icon src="sap-icon://ai" size="2rem" class="aiEmptyIcon" />
+                                        <Text text="Please select a card to see AI summary" class="aiEmptyText" />
+                                    </VBox>
+
+                                    <Button
+                                        text="Ask AI Copilot"
+                                        icon="sap-icon://ai"
+                                        type="Emphasized"
+                                        class="aiSummaryButton" />
+
+                                </VBox>
+                            </content>
+                        </Panel>
+                    </VBox>
+
+                </HBox>
             </content>
         </Page>
     </App>
