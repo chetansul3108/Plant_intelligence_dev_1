@@ -2,13 +2,24 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/BusyDialog",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, BusyDialog, MessageToast) {
+    "sap/m/MessageToast",
+    "sap/ui/core/Element"
+], function (Controller, JSONModel, BusyDialog, MessageToast, Element) {
     "use strict";
 
     return Controller.extend("plant_intelligence_dev.controller.Main", {
         onInit: function () {
             this.getView().setModel(new JSONModel({
+                selectedInsight: {
+                    hasSelection: false,
+                    key: "",
+                    subtitle: "Real-time performance across all plants",
+                    title: "",
+                    text: "",
+                    icon: "",
+                    iconClass: "",
+                    recommendation: ""
+                },
                 cards: [
                     {
                         key: "onTimeDelivery",
@@ -24,6 +35,7 @@ sap.ui.define([
                         iconClass: "iconGreen",
                         deltaClass: "deltaGreen",
                         chartClass: "chartGreen",
+                        selectedClass: "",
                         action: "getOnTimeDelivery",
                         lineBreak: true
                     },
@@ -41,6 +53,7 @@ sap.ui.define([
                         iconClass: "iconAmber",
                         deltaClass: "deltaRed",
                         chartClass: "chartAmber",
+                        selectedClass: "",
                         action: "getSalesToPayment",
                         lineBreak: false
                     },
@@ -58,6 +71,7 @@ sap.ui.define([
                         iconClass: "iconGreen",
                         deltaClass: "deltaGreen",
                         chartClass: "chartGreen",
+                        selectedClass: "",
                         action: "getOnTimeDelivery",
                         lineBreak: true
                     },
@@ -75,6 +89,7 @@ sap.ui.define([
                         iconClass: "iconRed",
                         deltaClass: "deltaRed",
                         chartClass: "chartRed",
+                        selectedClass: "",
                         action: "getStockShortage",
                         lineBreak: false
                     },
@@ -92,6 +107,7 @@ sap.ui.define([
                         iconClass: "iconAmber",
                         deltaClass: "deltaAmber",
                         chartClass: "chartAmber",
+                        selectedClass: "",
                         action: "getPlannedOrderSchedule",
                         lineBreak: true
                     },
@@ -109,15 +125,66 @@ sap.ui.define([
                         iconClass: "iconBlue",
                         deltaClass: "deltaRed",
                         chartClass: "chartBlue",
+                        selectedClass: "",
                         action: "getSalesOrdersInTransit",
                         lineBreak: false
                     }
                 ]
             }), "dashboardModel");
 
+            this._insightMeta = {
+                onTimeDelivery: {
+                    icon: "sap-icon://truck",
+                    iconClassGood: "iconGreen",
+                    iconClassBad: "iconRed",
+                    recommendationGood: "Maintain current dispatch schedule; monitor plants trending below target.",
+                    recommendationBad: "Investigate carriers and plants driving missed delivery windows."
+                },
+                orderLifecycle: {
+                    icon: "sap-icon://process",
+                    iconClassGood: "iconGreen",
+                    iconClassBad: "iconAmber",
+                    recommendationGood: "Lifecycle time is within target; continue current process cadence.",
+                    recommendationBad: "Investigate bottlenecks between order creation and invoicing."
+                },
+                otif: {
+                    icon: "sap-icon://shipping-status",
+                    iconClassGood: "iconGreen",
+                    iconClassBad: "iconAmber",
+                    recommendationGood: "OTIF performance is on target; keep monitoring priority accounts.",
+                    recommendationBad: "Prioritize delivery reliability and fill-rate improvements this week."
+                },
+                stockShortage: {
+                    icon: "sap-icon://alert",
+                    iconClassGood: "iconGreen",
+                    iconClassBad: "iconRed",
+                    recommendationGood: "Shortage levels are under control; continue current replenishment cycle.",
+                    recommendationBad: "Expedite replenishment for the plants driving the highest shortage value."
+                },
+                scheduleRisk: {
+                    icon: "sap-icon://alert",
+                    iconClassGood: "iconGreen",
+                    iconClassBad: "iconAmber",
+                    recommendationGood: "Schedule adherence is healthy across plants.",
+                    recommendationBad: "Review planning schedules for orders with confirmed-quantity shortfalls."
+                },
+                transitRisk: {
+                    icon: "sap-icon://shipping-status",
+                    iconClassGood: "iconGreen",
+                    iconClassBad: "iconBlue",
+                    recommendationGood: "Transit performance is on track; no action needed.",
+                    recommendationBad: "Proactively notify priority customers about expected delays."
+                }
+            };
+
             this._autoRefreshInterval = 5 * 60 * 1000;
             this._loadAllCards();
             this._startAutoRefresh();
+        },
+
+        onAfterRendering: function () {
+            var $wrappers = this.getView().$().find(".kpiCardWrapper");
+            $wrappers.off("click.kpiCard").on("click.kpiCard", this._onKpiCardClick.bind(this));
         },
 
         onExit: function () {
@@ -408,6 +475,11 @@ sap.ui.define([
             oModel.setProperty("/cards/" + iIndex + "/value", oMetrics.value);
             oModel.setProperty("/cards/" + iIndex + "/delta", oMetrics.delta);
             oModel.setProperty("/cards/" + iIndex + "/footerLeft", this._getCurrentTimeText());
+
+            const sSelectedKey = oModel.getProperty("/selectedInsight/key");
+            if (sSelectedKey === oCard.key) {
+                this._showInsightForKey(oCard.key);
+            }
         },
 
         _loadAllCards: async function (bShowBusy) {
@@ -452,6 +524,59 @@ sap.ui.define([
 
         onRefreshDashboard: async function () {
             await this._loadAllCards(true);
+        },
+
+        _onKpiCardClick: function (oEvent) {
+            const oDomRef = oEvent.currentTarget;
+            const oControl = Element.closestTo(oDomRef);
+
+            if (!oControl) {
+                return;
+            }
+
+            const aCustomData = oControl.getCustomData();
+            if (!aCustomData || !aCustomData.length) {
+                return;
+            }
+
+            const sKey = aCustomData[0].getValue();
+            this._showInsightForKey(sKey);
+        },
+
+        _showInsightForKey: function (sKey) {
+            const oModel = this.getView().getModel("dashboardModel");
+            const aCards = oModel.getProperty("/cards");
+            const oCard = aCards.find(function (c) {
+                return c.key === sKey;
+            });
+            const oMeta = this._insightMeta[sKey];
+
+            if (!oCard || !oMeta) {
+                return;
+            }
+
+            const bIsGood = oCard.statusState === "Success";
+            const sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
+            const sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
+
+            const sText = oCard.title + " is currently " + oCard.value + oCard.unit +
+                " (" + oCard.delta + "). " + oCard.footerRight + ".";
+
+            oModel.setProperty("/selectedInsight", {
+                hasSelection: true,
+                key: sKey,
+                subtitle: "Insight for selected KPI",
+                title: oCard.title + " — " + oCard.statusText,
+                text: sText,
+                icon: oMeta.icon,
+                iconClass: sIconClass,
+                recommendation: sRecommendation
+            });
+
+            aCards.forEach(function (c) {
+                c.selectedClass = (c.key === sKey) ? "kpiTileSelected" : "";
+            });
+            oModel.setProperty("/cards", aCards);
         }
     });
 });
