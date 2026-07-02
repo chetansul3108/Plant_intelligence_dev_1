@@ -48,10 +48,8 @@
                     <Text text="Updated 2 min ago" class="sectionUpdated" />
                 </HBox>
 
-                <HBox alignItems="Stretch" class="dashboardMainRow">
-
-                    <!-- LEFT: KPI Cards -->
-                    <VBox class="kpiColumn">
+                <HBox alignItems="Start" class="dashboardMainRow" width="100%">
+                    <VBox class="kpiColumn" width="70%">
                         <l:Grid
                             defaultSpan="XL6 L6 M6 S12"
                             vSpacing="0"
@@ -63,6 +61,7 @@
                                 <customData>
                                     <core:CustomData key="cardKey" value="{dashboardModel>key}" />
                                 </customData>
+
                                 <layoutData>
                                     <l:GridData
                                         span="XL6 L6 M6 S12"
@@ -116,36 +115,63 @@
                         </l:Grid>
                     </VBox>
 
-                    <!-- RIGHT: AI Summary -->
-                    <VBox class="aiSummaryColumn">
+                    <VBox class="aiSummaryColumn" width="30%">
                         <Panel class="aiSummaryPanel">
                             <content>
                                 <VBox class="aiSummaryInner">
 
                                     <HBox alignItems="Center" class="aiSummaryHeader">
-                                        <core:Icon src="sap-icon://ai" size="1.1rem" class="aiSummaryIcon" />
-                                        <Title text="AI Summary" level="H5" class="aiSummaryTitle" />
+                                        <core:Icon
+                                            src="sap-icon://ai"
+                                            size="1.1rem"
+                                            class="aiSummaryIcon" />
+                                        <Title
+                                            text="AI Summary"
+                                            level="H5"
+                                            class="aiSummaryTitle" />
                                     </HBox>
-                                    <Text text="{dashboardModel>/selectedInsight/subtitle}" class="aiSummarySubtitle" />
 
-                                    <VBox class="aiInsightItem" visible="{= ${dashboardModel>/selectedInsight/hasSelection} === true }">
+                                    <Text
+                                        text="{dashboardModel>/selectedInsight/subtitle}"
+                                        class="aiSummarySubtitle" />
+
+                                    <VBox
+                                        class="aiInsightItem"
+                                        visible="{= ${dashboardModel>/selectedInsight/hasSelection} === true }">
+
                                         <HBox alignItems="Center" class="aiInsightHeader">
                                             <core:Icon
                                                 src="{dashboardModel>/selectedInsight/icon}"
                                                 class="aiInsightIcon {dashboardModel>/selectedInsight/iconClass}" />
-                                            <Text text="{dashboardModel>/selectedInsight/title}" class="aiInsightTitle" />
+                                            <Text
+                                                text="{dashboardModel>/selectedInsight/title}"
+                                                class="aiInsightTitle" />
                                         </HBox>
-                                        <Text text="{dashboardModel>/selectedInsight/text}" class="aiInsightText" />
+
+                                        <Text
+                                            text="{dashboardModel>/selectedInsight/text}"
+                                            class="aiInsightText" />
 
                                         <VBox class="aiRecommendBlock">
-                                            <Text text="RECOMMENDED ACTION" class="aiRecommendLabel" />
-                                            <Text text="{dashboardModel>/selectedInsight/recommendation}" class="aiRecommendText" />
+                                            <Text
+                                                text="RECOMMENDED ACTION"
+                                                class="aiRecommendLabel" />
+                                            <Text
+                                                text="{dashboardModel>/selectedInsight/recommendation}"
+                                                class="aiRecommendText" />
                                         </VBox>
                                     </VBox>
 
-                                    <VBox class="aiEmptyState" visible="{= ${dashboardModel>/selectedInsight/hasSelection} !== true }">
-                                        <core:Icon src="sap-icon://ai" size="2rem" class="aiEmptyIcon" />
-                                        <Text text="Please select a card to see AI summary" class="aiEmptyText" />
+                                    <VBox
+                                        class="aiEmptyState"
+                                        visible="{= ${dashboardModel>/selectedInsight/hasSelection} !== true }">
+                                        <core:Icon
+                                            src="sap-icon://ai"
+                                            size="2rem"
+                                            class="aiEmptyIcon" />
+                                        <Text
+                                            text="Please select a card to see AI summary"
+                                            class="aiEmptyText" />
                                     </VBox>
 
                                     <Button
@@ -153,12 +179,10 @@
                                         icon="sap-icon://ai"
                                         type="Emphasized"
                                         class="aiSummaryButton" />
-
                                 </VBox>
                             </content>
                         </Panel>
                     </VBox>
-
                 </HBox>
             </content>
         </Page>
