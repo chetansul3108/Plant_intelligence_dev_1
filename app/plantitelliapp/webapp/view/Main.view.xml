@@ -49,7 +49,7 @@
                 </HBox>
 
                 <l:Grid
-                    defaultSpan="XL4 L4 M4 S12"
+                    defaultSpan="XL4 L4 M6 S12"
                     vSpacing="0"
                     hSpacing="0"
                     class="kpiGrid"
@@ -57,7 +57,9 @@
 
                     <Panel class="kpiTile {dashboardModel>accentClass}">
                         <layoutData>
-                            <l:GridData span="XL4 L4 M4 S12" />
+                            <l:GridData
+                                span="XL4 L4 M6 S12"
+                                linebreak="{dashboardModel>lineBreak}" />
                         </layoutData>
 
                         <content>
@@ -73,11 +75,17 @@
                                 </HBox>
 
                                 <VBox class="kpiBodyBlock">
-                                    <Text text="{dashboardModel>title}" class="kpiTitle" />
+                                    <Text
+                                        text="{dashboardModel>title}"
+                                        class="kpiTitle" />
 
                                     <HBox alignItems="End" class="kpiValueRow">
-                                        <Text text="{dashboardModel>value}" class="kpiValue" />
-                                        <Text text="{dashboardModel>unit}" class="kpiUnit" />
+                                        <Text
+                                            text="{dashboardModel>value}"
+                                            class="kpiValue" />
+                                        <Text
+                                            text="{dashboardModel>unit}"
+                                            class="kpiUnit" />
                                     </HBox>
 
                                     <Text
@@ -86,8 +94,12 @@
                                 </VBox>
 
                                 <HBox justifyContent="SpaceBetween" class="kpiFooterRow">
-                                    <Text text="{dashboardModel>footerLeft}" class="kpiFooterLeft" />
-                                    <Text text="{dashboardModel>footerRight}" class="kpiFooterRight" />
+                                    <Text
+                                        text="{dashboardModel>footerLeft}"
+                                        class="kpiFooterLeft" />
+                                    <Text
+                                        text="{dashboardModel>footerRight}"
+                                        class="kpiFooterRight" />
                                 </HBox>
                             </VBox>
                         </content>

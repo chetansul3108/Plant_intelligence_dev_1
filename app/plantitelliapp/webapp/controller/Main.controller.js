@@ -24,7 +24,8 @@ sap.ui.define([
                         iconClass: "iconGreen",
                         deltaClass: "deltaGreen",
                         chartClass: "chartGreen",
-                        action: "getOnTimeDelivery"
+                        action: "getOnTimeDelivery",
+                        lineBreak: true
                     },
                     {
                         key: "orderLifecycle",
@@ -40,7 +41,8 @@ sap.ui.define([
                         iconClass: "iconAmber",
                         deltaClass: "deltaRed",
                         chartClass: "chartAmber",
-                        action: "getSalesToPayment"
+                        action: "getSalesToPayment",
+                        lineBreak: false
                     },
                     {
                         key: "otif",
@@ -56,7 +58,8 @@ sap.ui.define([
                         iconClass: "iconGreen",
                         deltaClass: "deltaGreen",
                         chartClass: "chartGreen",
-                        action: "getOnTimeDelivery"
+                        action: "getOnTimeDelivery",
+                        lineBreak: true
                     },
                     {
                         key: "stockShortage",
@@ -72,7 +75,8 @@ sap.ui.define([
                         iconClass: "iconRed",
                         deltaClass: "deltaRed",
                         chartClass: "chartRed",
-                        action: "getStockShortage"
+                        action: "getStockShortage",
+                        lineBreak: false
                     },
                     {
                         key: "scheduleRisk",
@@ -88,7 +92,8 @@ sap.ui.define([
                         iconClass: "iconAmber",
                         deltaClass: "deltaAmber",
                         chartClass: "chartAmber",
-                        action: "getPlannedOrderSchedule"
+                        action: "getPlannedOrderSchedule",
+                        lineBreak: true
                     },
                     {
                         key: "transitRisk",
@@ -104,7 +109,8 @@ sap.ui.define([
                         iconClass: "iconBlue",
                         deltaClass: "deltaRed",
                         chartClass: "chartBlue",
-                        action: "getSalesOrdersInTransit"
+                        action: "getSalesOrdersInTransit",
+                        lineBreak: false
                     }
                 ]
             }), "dashboardModel");
@@ -289,64 +295,63 @@ sap.ui.define([
                     break;
                 }
 
-case "stockShortage": {
-    const iCount = aResults.length;
+                case "stockShortage": {
+                    const iCount = aResults.length;
 
-    const nShortageValue = aResults.reduce(function (sum, oRow) {
-        const nQty = this._toNumber(oRow.ShortageQty);
-        const nPrice = this._toNumber(oRow.StandardPrice);
-        return sum + (nQty * nPrice);
-    }.bind(this), 0);
+                    const nShortageValue = aResults.reduce(function (sum, oRow) {
+                        const nQty = this._toNumber(oRow.ShortageQty);
+                        const nPrice = this._toNumber(oRow.StandardPrice);
+                        return sum + (nQty * nPrice);
+                    }.bind(this), 0);
 
-    sValue = String(iCount);
-    sDelta = "Shortage value " + nShortageValue.toFixed(2);
-    break;
-}
+                    sValue = String(iCount);
+                    sDelta = "Shortage value " + nShortageValue.toFixed(2);
+                    break;
+                }
 
                 case "scheduleRisk": {
-    const aRisk = aResults.filter(function (oRow) {
-        const dScheduled = this._toDate(oRow.ScheduledDate);
-        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
-        const nPlannedQty = this._toNumber(oRow.PlannedQty);
-        const nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
+                    const aRisk = aResults.filter(function (oRow) {
+                        const dScheduled = this._toDate(oRow.ScheduledDate);
+                        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
+                        const nPlannedQty = this._toNumber(oRow.PlannedQty);
+                        const nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
 
-        const bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
-        const bMissingDateRisk = !dScheduled || !dBasicFinish;
-        const bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
+                        const bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
+                        const bMissingDateRisk = !dScheduled || !dBasicFinish;
+                        const bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
 
-        return bDateRisk || bMissingDateRisk || bQtyRisk;
-    }.bind(this));
+                        return bDateRisk || bMissingDateRisk || bQtyRisk;
+                    }.bind(this));
 
-    const aDelayDays = aResults.map(function (oRow) {
-        const dScheduled = this._toDate(oRow.ScheduledDate);
-        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
+                    const aDelayDays = aResults.map(function (oRow) {
+                        const dScheduled = this._toDate(oRow.ScheduledDate);
+                        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
 
-        if (!dScheduled || !dBasicFinish) {
-            return null;
-        }
+                        if (!dScheduled || !dBasicFinish) {
+                            return null;
+                        }
 
-        if (dScheduled.getTime() <= dBasicFinish.getTime()) {
-            return null;
-        }
+                        if (dScheduled.getTime() <= dBasicFinish.getTime()) {
+                            return null;
+                        }
 
-        return this._daysBetween(dBasicFinish, dScheduled);
-    }.bind(this)).filter(function (nDays) {
-        return nDays !== null && nDays > 0;
-    });
+                        return this._daysBetween(dBasicFinish, dScheduled);
+                    }.bind(this)).filter(function (nDays) {
+                        return nDays !== null && nDays > 0;
+                    });
 
-    const nAvgDelay = aDelayDays.length
-        ? aDelayDays.reduce(function (sum, nDays) {
-            return sum + nDays;
-        }, 0) / aDelayDays.length
-        : null;
+                    const nAvgDelay = aDelayDays.length
+                        ? aDelayDays.reduce(function (sum, nDays) {
+                            return sum + nDays;
+                        }, 0) / aDelayDays.length
+                        : null;
 
-    sValue = String(aRisk.length);
-    sDelta = nAvgDelay !== null
-        ? "Avg " + nAvgDelay.toFixed(1) + " day delay"
-        : "Avg delay N/A";
-
-    break;
-}
+                    sValue = String(aRisk.length);
+                    sDelta = nAvgDelay !== null
+                        ? "Avg " + nAvgDelay.toFixed(1) + " day delay"
+                        : "Avg delay N/A";
+                    break;
+                }
 
                 case "transitRisk": {
                     const aRisk = aResults.filter(function (oRow) {
@@ -364,7 +369,9 @@ case "stockShortage": {
                     });
 
                     const nAvgDelay = aDelayedDays.length
-                        ? aDelayedDays.reduce(function (a, b) { return a + b; }, 0) / aDelayedDays.length
+                        ? aDelayedDays.reduce(function (a, b) {
+                            return a + b;
+                        }, 0) / aDelayedDays.length
                         : 0;
 
                     sValue = String(aRisk.length);
@@ -401,9 +408,6 @@ case "stockShortage": {
             oModel.setProperty("/cards/" + iIndex + "/value", oMetrics.value);
             oModel.setProperty("/cards/" + iIndex + "/delta", oMetrics.delta);
             oModel.setProperty("/cards/" + iIndex + "/footerLeft", this._getCurrentTimeText());
-
-            console.log("CARD KEY:", oCard.key);
-            console.log("FIRST ROW:", aResults[0]);
         },
 
         _loadAllCards: async function (bShowBusy) {
