@@ -130,34 +130,35 @@ module.exports = cds.service.impl(async function () {
     }
 });
 
-    this.on('getStockShortage', async () => {
-        try {
-            const rows = await fetchRaw(
-                'Z_I_StockShortage_CDS',
-                'Z_I_StockShortage'
+   this.on('getStockShortage', async () => {
+    try {
+        const rows = await fetchRaw('Z_I_StockShortage_CDS', 'Z_I_StockShortage');
+
+        console.log("RAW ROW:", JSON.stringify(rows[0], null, 2));
+        console.log("RAW KEYS:", rows[0] ? Object.keys(rows[0]) : []);
+
+        return rows.map(item => {
+            const shortageQty = Number(item.TotalStockDecreaseQty ?? item.ShortageQty ?? 0);
+            const standardPrice = Number(
+                item.StandardPrice ??
+                item.MaterialStandardPrice ??
+                item.MovingAveragePrice ??
+                item.Price ??
+                0
             );
 
-            return rows.map(item => {
-                const shortageQty = Number(item.TotalStockDecreaseQty ?? 0);
-                const standardPrice = Number(item.StandardPrice ?? 0);
-
-                return {
-                    Material: item.Material ?? '',
-                    Plant: item.Plant ?? '',
-                    StorageLocation: String(item.StorageLocationCount ?? ''),
-                    AvailableQty: item.TotalWarehouseStock ?? '',
-                    RequirementQty: item.TotalConsumptionStockQty ?? '',
-                    ShortageQty: item.TotalStockDecreaseQty ?? '',
-                    StandardPrice: String(standardPrice),
-                    ShortageValue: String(shortageQty * standardPrice),
-                    RequirementDate: formatSapDate(item.LatestReqDate) || formatSapDate(item.LastPostingDate),
-                    MRPController: item.MRPController ?? ''
-                };
-            });
-        } catch (err) {
-            handleError('getStockShortage', err);
-        }
-    });
+            return {
+                Material: item.Material ?? '',
+                Plant: item.Plant ?? '',
+                ShortageQty: String(shortageQty),
+                StandardPrice: String(standardPrice),
+                ShortageValue: String(shortageQty * standardPrice)
+            };
+        });
+    } catch (err) {
+        handleError('getStockShortage', err);
+    }
+});
 
     this.on('getPlannedOrderSchedule', async () => {
     try {
