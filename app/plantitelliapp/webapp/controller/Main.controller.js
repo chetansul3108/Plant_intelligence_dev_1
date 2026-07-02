@@ -289,54 +289,64 @@ sap.ui.define([
                     break;
                 }
 
-                case "stockShortage": {
-                    const iCount = aResults.length;
-                    const nShortageQty = aResults.reduce(function (sum, oRow) {
-                        return sum + this._toNumber(oRow.ShortageQty);
-                    }.bind(this), 0);
+case "stockShortage": {
+    const iCount = aResults.length;
 
-                    sValue = String(iCount);
-                    sDelta = "Total shortage qty " + nShortageQty.toFixed(2);
-                    break;
-                }
+    const nShortageValue = aResults.reduce(function (sum, oRow) {
+        const nQty = this._toNumber(oRow.ShortageQty);
+        const nPrice = this._toNumber(oRow.StandardPrice);
+        return sum + (nQty * nPrice);
+    }.bind(this), 0);
+
+    sValue = String(iCount);
+    sDelta = "Shortage value " + nShortageValue.toFixed(2);
+    break;
+}
 
                 case "scheduleRisk": {
-                    const aRisk = aResults.filter(function (oRow) {
-                        const dConfirmedEnd = this._toDate(oRow.ScheduledDate);
-                        const dProductionEnd = this._toDate(oRow.BasicFinishDate);
-                        const nPlannedQty = this._toNumber(oRow.PlannedQty);
-                        const nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
+    const aRisk = aResults.filter(function (oRow) {
+        const dScheduled = this._toDate(oRow.ScheduledDate);
+        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
+        const nPlannedQty = this._toNumber(oRow.PlannedQty);
+        const nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
 
-                        const bNoConfirmedEnd = !dConfirmedEnd;
-                        const bNoProductionEnd = !dProductionEnd;
-                        const bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
+        const bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
+        const bMissingDateRisk = !dScheduled || !dBasicFinish;
+        const bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
 
-                        return bNoConfirmedEnd || bNoProductionEnd || bQtyRisk;
-                    }.bind(this));
+        return bDateRisk || bMissingDateRisk || bQtyRisk;
+    }.bind(this));
 
-                    const aDelayDays = aRisk.map(function (oRow) {
-                        const dPlannedStart = this._toDate(oRow.BasicStartDate);
-                        const dConfirmedEnd = this._toDate(oRow.ScheduledDate);
+    const aDelayDays = aResults.map(function (oRow) {
+        const dScheduled = this._toDate(oRow.ScheduledDate);
+        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
 
-                        if (!dPlannedStart || !dConfirmedEnd) {
-                            return null;
-                        }
+        if (!dScheduled || !dBasicFinish) {
+            return null;
+        }
 
-                        return this._daysBetween(dPlannedStart, dConfirmedEnd);
-                    }.bind(this)).filter(function (nDays) {
-                        return nDays !== null && nDays > 0;
-                    });
+        if (dScheduled.getTime() <= dBasicFinish.getTime()) {
+            return null;
+        }
 
-                    const nAvgDelay = aDelayDays.length
-                        ? aDelayDays.reduce(function (a, b) { return a + b; }, 0) / aDelayDays.length
-                        : 0;
+        return this._daysBetween(dBasicFinish, dScheduled);
+    }.bind(this)).filter(function (nDays) {
+        return nDays !== null && nDays > 0;
+    });
 
-                    sValue = String(aRisk.length);
-                    sDelta = aRisk.length
-                        ? "Avg " + nAvgDelay.toFixed(1) + " day delay"
-                        : "No fallback risk found";
-                    break;
-                }
+    const nAvgDelay = aDelayDays.length
+        ? aDelayDays.reduce(function (sum, nDays) {
+            return sum + nDays;
+        }, 0) / aDelayDays.length
+        : null;
+
+    sValue = String(aRisk.length);
+    sDelta = nAvgDelay !== null
+        ? "Avg " + nAvgDelay.toFixed(1) + " day delay"
+        : "Avg delay N/A";
+
+    break;
+}
 
                 case "transitRisk": {
                     const aRisk = aResults.filter(function (oRow) {
