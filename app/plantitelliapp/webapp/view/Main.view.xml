@@ -7,13 +7,13 @@
     displayBlock="true">
 
     <App>
-        <Page title="" class="kpiPage">
+        <Page title="" class="kpiPage" enableScrolling="false">
             <customHeader>
                 <Toolbar class="dashboardHeader" height="3.5rem">
-                    <core:Icon
-                        src="sap-icon://product"
-                        size="1.25rem"
-                        class="headerLogo" />
+                    <Image
+                        src="images/yash-logo.png"
+                        height="1.9rem"
+                        class="headerLogoImg" />
 
                     <Title
                         text="Plant Intelligence"
@@ -34,19 +34,19 @@
                 </HBox>
 
                 <HBox
-    justifyContent="SpaceBetween"
-    class="dashboardMainRow"
-    width="100%">
+                    justifyContent="SpaceBetween"
+                    class="dashboardMainRow"
+                    width="100%">
 
                     <VBox class="kpiColumn" width="70%" fitContainer="true">
                         <l:Grid
                             defaultSpan="XL6 L6 M6 S12"
                             vSpacing="0"
                             hSpacing="0"
-                            class="kpiGrid"
+                            class="kpiGrid {dashboardModel>/hasSelectionClass}"
                             content="{dashboardModel>/cards}">
 
-                            <VBox class="kpiCardWrapper">
+                            <VBox class="kpiCardWrapper {dashboardModel>selectedClass}">
                                 <customData>
                                     <core:CustomData key="cardKey" value="{dashboardModel>key}" />
                                 </customData>
@@ -97,6 +97,8 @@
                                                     text="{dashboardModel>footerRight}"
                                                     class="kpiFooterRight" />
                                             </HBox>
+
+                                            
                                         </VBox>
                                     </content>
                                 </Panel>

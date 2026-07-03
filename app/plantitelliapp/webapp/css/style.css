@@ -1,8 +1,12 @@
 /* ============ Page Background ============ */
 .kpiPage,
-.kpiPage .sapMPageCont,
+.kpiPage .sapMPageCont {
+    background: #eef2f5 !important;
+}
+
 .kpiPage .sapMPageEnableScrolling {
     background: #eef2f5 !important;
+    overflow: hidden !important;
 }
 
 /* ============ Header Toolbar ============ */
@@ -15,8 +19,14 @@
     z-index: 2;
 }
 
-.headerLogo {
-    color: #1a2233;
+.headerLogoImg {
+    margin-right: 0.5rem;
+}
+
+.headerLogoImg img {
+    display: block;
+    height: 1.9rem;
+    width: auto;
 }
 
 .titleMain {
@@ -95,7 +105,7 @@
     width: 100%;
     padding: 0 !important;
     box-sizing: border-box;
-    height: 100%;
+    height: auto;
 }
 
 .kpiGrid > div {
@@ -121,7 +131,7 @@
 .kpiCardWrapper {
     cursor: pointer;
     width: 100%;
-    transition: transform 0.12s ease;
+    transition: transform 0.15s ease;
 }
 
 .kpiCardWrapper:hover {
@@ -132,10 +142,39 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Highlight the selected card */
-.kpiTileSelected {
+/* ============ Selected Card Effects ============ */
+.kpiTile.kpiTileSelected {
     border-color: #4d5bf9 !important;
-    box-shadow: 0 0 0 2px rgba(77, 91, 249, 0.25), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 10px 24px rgba(15, 24, 48, 0.18), 0 2px 6px rgba(15, 24, 48, 0.1) !important;
+    animation: selectedPop 0.35s ease;
+    transform: translateY(-3px);
+}
+
+@keyframes selectedPop {
+    0% {
+        transform: scale(0.98);
+    }
+    60% {
+        transform: scale(1.015);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ============ Dim unselected cards once a selection exists ============ */
+.kpiTile {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease, filter 0.25s ease, transform 0.2s ease;
+}
+
+.kpiGrid.hasSelection .kpiTile:not(.kpiTileSelected) {
+    opacity: 0.6;
+    filter: saturate(0.7);
+    box-shadow: none !important;
+}
+
+.kpiGrid.hasSelection .kpiCardWrapper:not(:has(.kpiTileSelected)):hover .kpiTile {
+    opacity: 0.85;
 }
 
 /* ============ KPI Tile ============ */
@@ -351,6 +390,18 @@
 .aiInsightItem {
     padding: 0.8rem 0;
     border-top: 1px solid #eef1f4;
+    animation: insightFadeIn 0.3s ease;
+}
+
+@keyframes insightFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .aiInsightHeader {
