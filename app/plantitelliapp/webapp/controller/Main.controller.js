@@ -7,12 +7,13 @@ sap.ui.define([
     "plant_intelligence_dev/formatter/kpiformatter"
 ], function (Controller, JSONModel, BusyDialog, MessageToast, Element, kpiformatter) {
     "use strict";
-
+ 
     return Controller.extend("plant_intelligence_dev.controller.Main", {
         formatter: kpiformatter,
-
+ 
         onInit: function () {
             this.getView().setModel(new JSONModel({
+                hasSelectionClass: "",
                 selectedInsight: {
                     hasSelection: false,
                     key: "",
@@ -134,7 +135,7 @@ sap.ui.define([
                     }
                 ]
             }), "dashboardModel");
-
+ 
             this._insightMeta = {
                 onTimeDelivery: {
                     icon: "sap-icon://truck",
@@ -179,49 +180,49 @@ sap.ui.define([
                     recommendationBad: "Proactively notify priority customers about expected delays."
                 }
             };
-
+ 
             this._autoRefreshInterval = 5 * 60 * 1000;
             this._loadAllCards();
             this._startAutoRefresh();
         },
-
+ 
         onAfterRendering: function () {
             var $wrappers = this.getView().$().find(".kpiCardWrapper");
             $wrappers.off("click.kpiCard").on("click.kpiCard", this._onKpiCardClick.bind(this));
         },
-
+ 
         onExit: function () {
             if (this._refreshTimer) {
                 clearInterval(this._refreshTimer);
                 this._refreshTimer = null;
             }
         },
-
+ 
         _startAutoRefresh: function () {
             if (this._refreshTimer) {
                 clearInterval(this._refreshTimer);
             }
-
+ 
             this._refreshTimer = setInterval(function () {
                 this._loadAllCards(false);
             }.bind(this), this._autoRefreshInterval);
         },
-
+ 
         _getCurrentTimeText: function () {
             var oNow = new Date();
             var sHours = String(oNow.getHours()).padStart(2, "0");
             var sMinutes = String(oNow.getMinutes()).padStart(2, "0");
             return sHours + ":" + sMinutes + " today";
         },
-
+ 
         _fetchData: async function (action, bShowBusy) {
             var oBusyDialog = null;
-
+ 
             if (bShowBusy) {
                 oBusyDialog = new BusyDialog({ text: "Loading..." });
                 oBusyDialog.open();
             }
-
+ 
             try {
                 var response = await fetch("/transit-service/" + action, {
                     method: "POST",
@@ -230,13 +231,13 @@ sap.ui.define([
                     },
                     body: JSON.stringify({})
                 });
-
+ 
                 var contentType = response.headers.get("content-type") || "";
                 if (!response.ok || !contentType.includes("application/json")) {
                     var text = await response.text();
                     throw new Error("HTTP " + response.status + ": " + text);
                 }
-
+ 
                 var data = await response.json();
                 return data.value || [];
             } catch (err) {
@@ -248,94 +249,94 @@ sap.ui.define([
                 }
             }
         },
-
+ 
         _toDate: function (v) {
             if (!v) {
                 return null;
             }
-
+ 
             if (typeof v === "string" && v.startsWith("/Date(")) {
                 var m = v.match(/\/Date\((\d+)\)\//);
                 if (m) {
                     return new Date(Number(m[1]));
                 }
             }
-
+ 
             var d = new Date(v);
             return isNaN(d.getTime()) ? null : d;
         },
-
+ 
         _toNumber: function (v) {
             var n = parseFloat(v);
             return isNaN(n) ? 0 : n;
         },
-
+ 
         _daysBetween: function (d1, d2) {
             if (!d1 || !d2) {
                 return null;
             }
             return (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24);
         },
-
+ 
         _calculateCardMetrics: function (sKey, aResults) {
             var sValue = "0";
             var sDelta = "0 records loaded";
-
+ 
             if (!Array.isArray(aResults) || aResults.length === 0) {
                 return {
                     value: "0",
                     delta: "0 records loaded"
                 };
             }
-
+ 
             switch (sKey) {
                 case "orderLifecycle": {
                     var aValidLifecycle = aResults.map(function (oRow) {
                         var dStart = this._toDate(oRow.OrderCreationDate);
                         var dEnd = this._toDate(oRow.InvoiceDate);
-
+ 
                         if (!dStart || !dEnd) {
                             return null;
                         }
-
+ 
                         var nDays = this._daysBetween(dStart, dEnd);
                         return nDays !== null && nDays >= 0 ? nDays : null;
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null;
                     });
-
+ 
                     var nTotalLifecycle = aValidLifecycle.reduce(function (sum, nDays) {
                         return sum + nDays;
                     }, 0);
-
+ 
                     var nAvgLifecycle = aValidLifecycle.length ? (nTotalLifecycle / aValidLifecycle.length) : 0;
-
+ 
                     sValue = nAvgLifecycle.toFixed(1);
                     sDelta = aValidLifecycle.length + " lifecycle records measured";
                     break;
                 }
-
+ 
                 case "onTimeDelivery": {
                     var aValidDelivery = aResults.filter(function (oRow) {
                         return !!this._toDate(oRow.PlannedDeliveryDate) &&
                                !!this._toDate(oRow.ActualGIDeliveryDate);
                     }.bind(this));
-
+ 
                     var iTotalDelivery = aValidDelivery.length;
-
+ 
                     var iOnTime = aValidDelivery.filter(function (oRow) {
                         var dPlanned = this._toDate(oRow.PlannedDeliveryDate);
                         var dActual = this._toDate(oRow.ActualGIDeliveryDate);
                         return dActual.getTime() <= dPlanned.getTime();
                     }.bind(this)).length;
-
+ 
                     var nPctDelivery = iTotalDelivery ? (iOnTime / iTotalDelivery) * 100 : 0;
-
+ 
                     sValue = nPctDelivery.toFixed(1);
                     sDelta = iOnTime + " on-time of " + iTotalDelivery + " valid deliveries";
                     break;
                 }
-
+ 
                 case "otif": {
                     var aValidOtif = aResults.filter(function (oRow) {
                         return !!this._toDate(oRow.PlannedDeliveryDate) &&
@@ -343,91 +344,91 @@ sap.ui.define([
                                this._toNumber(oRow.OrderedQty) > 0 &&
                                this._toNumber(oRow.ActualDeliveryQuantity) > 0;
                     }.bind(this));
-
+ 
                     var iTotalOtif = aValidOtif.length;
-
+ 
                     var iOtif = aValidOtif.filter(function (oRow) {
                         var dPlanned = this._toDate(oRow.PlannedDeliveryDate);
                         var dActual = this._toDate(oRow.ActualGIDeliveryDate);
                         var bOnTime = dActual.getTime() <= dPlanned.getTime();
-
+ 
                         var nOrdered = this._toNumber(oRow.OrderedQty);
                         var nDelivered = this._toNumber(oRow.ActualDeliveryQuantity);
                         var bInFull = nDelivered >= nOrdered;
-
+ 
                         return bOnTime && bInFull;
                     }.bind(this)).length;
-
+ 
                     var nPctOtif = iTotalOtif ? (iOtif / iTotalOtif) * 100 : 0;
-
+ 
                     sValue = nPctOtif.toFixed(1);
                     sDelta = iOtif + " OTIF of " + iTotalOtif + " valid deliveries";
                     break;
                 }
-
+ 
                 case "stockShortage": {
                     var iCount = aResults.length;
-
+ 
                     var nShortageValue = aResults.reduce(function (sum, oRow) {
                         var nQty = this._toNumber(oRow.ShortageQty);
                         var nPrice = this._toNumber(oRow.StandardPrice);
                         return sum + (nQty * nPrice);
                     }.bind(this), 0);
-
+ 
                     sValue = String(iCount);
                     sDelta = "Shortage value " + nShortageValue.toFixed(2);
                     break;
                 }
-
+ 
                 case "scheduleRisk": {
                     var aRiskSchedule = aResults.filter(function (oRow) {
                         var dScheduled = this._toDate(oRow.ScheduledDate);
                         var dBasicFinish = this._toDate(oRow.BasicFinishDate);
                         var nPlannedQty = this._toNumber(oRow.PlannedQty);
                         var nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
-
+ 
                         var bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
                         var bMissingDateRisk = !dScheduled || !dBasicFinish;
                         var bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
-
+ 
                         return bDateRisk || bMissingDateRisk || bQtyRisk;
                     }.bind(this));
-
+ 
                     var aDelayDays = aResults.map(function (oRow) {
                         var dScheduled = this._toDate(oRow.ScheduledDate);
                         var dBasicFinish = this._toDate(oRow.BasicFinishDate);
-
+ 
                         if (!dScheduled || !dBasicFinish) {
                             return null;
                         }
-
+ 
                         if (dScheduled.getTime() <= dBasicFinish.getTime()) {
                             return null;
                         }
-
+ 
                         return this._daysBetween(dBasicFinish, dScheduled);
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null && nDays > 0;
                     });
-
+ 
                     var nAvgDelay = aDelayDays.length
                         ? aDelayDays.reduce(function (sum, nDays) {
                             return sum + nDays;
                         }, 0) / aDelayDays.length
                         : null;
-
+ 
                     sValue = String(aRiskSchedule.length);
                     sDelta = nAvgDelay !== null ? "Avg " + nAvgDelay.toFixed(1) + " day delay" : "Avg delay N/A";
                     break;
                 }
-
+ 
                 case "transitRisk": {
                     var aRiskTransit = aResults.filter(function (oRow) {
                         var dEta = this._toDate(oRow.ETA);
                         var dRequested = this._toDate(oRow.RequestedDeliveryDate);
                         return dEta && dRequested && dEta.getTime() > dRequested.getTime();
                     }.bind(this));
-
+ 
                     var aDelayedDaysTransit = aRiskTransit.map(function (oRow) {
                         var dEta = this._toDate(oRow.ETA);
                         var dRequested = this._toDate(oRow.RequestedDeliveryDate);
@@ -435,66 +436,66 @@ sap.ui.define([
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null && nDays > 0;
                     });
-
+ 
                     var nAvgTransitDelay = aDelayedDaysTransit.length
                         ? aDelayedDaysTransit.reduce(function (a, b) {
                             return a + b;
                         }, 0) / aDelayedDaysTransit.length
                         : 0;
-
+ 
                     sValue = String(aRiskTransit.length);
                     sDelta = aRiskTransit.length
                         ? "ETA delayed avg " + nAvgTransitDelay.toFixed(1) + " days"
                         : "No delayed transit orders";
                     break;
                 }
-
+ 
                 default:
                     sValue = String(aResults.length);
                     sDelta = aResults.length + " records loaded";
                     break;
             }
-
+ 
             return {
                 value: sValue,
                 delta: sDelta
             };
         },
-
+ 
         _loadCardByIndex: async function (iIndex, bShowBusy) {
             var oModel = this.getView().getModel("dashboardModel");
             var oCard = oModel.getProperty("/cards/" + iIndex);
-
+ 
             if (!oCard) {
                 return;
             }
-
+ 
             var aResults = await this._fetchData(oCard.action, bShowBusy);
             var oMetrics = this._calculateCardMetrics(oCard.key, aResults);
             var sStatusText = kpiformatter.getTargetStatusText(oCard.key, oMetrics.value);
             var sStatusState = kpiformatter.getTargetStatusState(oCard.key, oMetrics.value);
-
+ 
             oModel.setProperty("/cards/" + iIndex + "/value", oMetrics.value);
             oModel.setProperty("/cards/" + iIndex + "/delta", oMetrics.delta);
             oModel.setProperty("/cards/" + iIndex + "/footerLeft", this._getCurrentTimeText());
             oModel.setProperty("/cards/" + iIndex + "/statusText", sStatusText);
             oModel.setProperty("/cards/" + iIndex + "/statusState", sStatusState);
-
+ 
             var sSelectedKey = oModel.getProperty("/selectedInsight/key");
             if (sSelectedKey === oCard.key) {
                 this._showInsightForKey(oCard.key);
             }
         },
-
+ 
         _loadAllCards: async function (bShowBusy) {
             var oModel = this.getView().getModel("dashboardModel");
             var aCards = oModel.getProperty("/cards") || [];
             var bBusy = bShowBusy !== false;
-
+ 
             if (bBusy) {
                 var oBusyDialog = new BusyDialog({ text: "Loading dashboard..." });
                 oBusyDialog.open();
-
+ 
                 try {
                     await Promise.all(aCards.map(function (oCard, iIndex) {
                         return this._loadCardByIndex(iIndex, false);
@@ -502,15 +503,15 @@ sap.ui.define([
                 } finally {
                     oBusyDialog.close();
                 }
-
+ 
                 return;
             }
-
+ 
             await Promise.all(aCards.map(function (oCard, iIndex) {
                 return this._loadCardByIndex(iIndex, false);
             }.bind(this)));
         },
-
+ 
         onCardPress: async function (oEvent) {
             var sKey = oEvent.getSource().data("cardKey");
             var oModel = this.getView().getModel("dashboardModel");
@@ -518,35 +519,35 @@ sap.ui.define([
             var iIndex = aCards.findIndex(function (oCard) {
                 return oCard.key === sKey;
             });
-
+ 
             if (iIndex === -1) {
                 return;
             }
-
+ 
             await this._loadCardByIndex(iIndex, true);
         },
-
+ 
         onRefreshDashboard: async function () {
             await this._loadAllCards(true);
         },
-
+ 
         _onKpiCardClick: function (oEvent) {
             var oDomRef = oEvent.currentTarget;
             var oControl = Element.closestTo(oDomRef);
-
+ 
             if (!oControl) {
                 return;
             }
-
+ 
             var aCustomData = oControl.getCustomData();
             if (!aCustomData || !aCustomData.length) {
                 return;
             }
-
+ 
             var sKey = aCustomData[0].getValue();
             this._showInsightForKey(sKey);
         },
-
+ 
         _showInsightForKey: function (sKey) {
             var oModel = this.getView().getModel("dashboardModel");
             var aCards = oModel.getProperty("/cards");
@@ -554,18 +555,18 @@ sap.ui.define([
                 return c.key === sKey;
             });
             var oMeta = this._insightMeta[sKey];
-
+ 
             if (!oCard || !oMeta) {
                 return;
             }
-
+ 
             var bIsGood = oCard.statusState === "Success";
             var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
             var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
-
+ 
             var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
                 " (" + oCard.delta + "). " + oCard.footerRight + ".";
-
+ 
             oModel.setProperty("/selectedInsight", {
                 hasSelection: true,
                 key: sKey,
@@ -576,7 +577,11 @@ sap.ui.define([
                 iconClass: sIconClass,
                 recommendation: sRecommendation
             });
-
+ 
+            // Toggle a class on the grid so unselected tiles can be dimmed
+            // via CSS (.kpiGrid.hasSelection .kpiTile:not(.kpiTileSelected))
+            oModel.setProperty("/hasSelectionClass", "hasSelection");
+ 
             aCards.forEach(function (c) {
                 c.selectedClass = (c.key === sKey) ? "kpiTileSelected" : "";
             });
