@@ -21,21 +21,6 @@
                         class="titleMain" />
 
                     <ToolbarSpacer />
-
-                    <Button
-                        text="AI Copilot"
-                        icon="sap-icon://ai"
-                        type="Emphasized"
-                        class="aiCopilotButton" />
-
-                    <Avatar
-                        displaySize="XS"
-                        class="profileAvatarBlank" />
-
-                    <Avatar
-                        displaySize="XS"
-                        initials="SC"
-                        class="profileAvatarInitials" />
                 </Toolbar>
             </customHeader>
 
@@ -48,8 +33,12 @@
                     <Text text="Updated 2 min ago" class="sectionUpdated" />
                 </HBox>
 
-                <HBox alignItems="Start" class="dashboardMainRow" width="100%">
-                    <VBox class="kpiColumn" width="70%">
+                <HBox
+    justifyContent="SpaceBetween"
+    class="dashboardMainRow"
+    width="100%">
+
+                    <VBox class="kpiColumn" width="70%" fitContainer="true">
                         <l:Grid
                             defaultSpan="XL6 L6 M6 S12"
                             vSpacing="0"
@@ -115,10 +104,10 @@
                         </l:Grid>
                     </VBox>
 
-                    <VBox class="aiSummaryColumn" width="30%">
-                        <Panel class="aiSummaryPanel">
+                    <VBox class="aiSummaryColumn" width="30%" fitContainer="true">
+                        <Panel class="aiSummaryPanel" height="100%">
                             <content>
-                                <VBox class="aiSummaryInner">
+                                <VBox class="aiSummaryInner" height="100%">
 
                                     <HBox alignItems="Center" class="aiSummaryHeader">
                                         <core:Icon
@@ -174,11 +163,6 @@
                                             class="aiEmptyText" />
                                     </VBox>
 
-                                    <Button
-                                        text="Ask AI Copilot"
-                                        icon="sap-icon://ai"
-                                        type="Emphasized"
-                                        class="aiSummaryButton" />
                                 </VBox>
                             </content>
                         </Panel>
