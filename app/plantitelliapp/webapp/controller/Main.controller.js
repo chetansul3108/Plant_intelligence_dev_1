@@ -3,11 +3,14 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/BusyDialog",
     "sap/m/MessageToast",
-    "sap/ui/core/Element"
-], function (Controller, JSONModel, BusyDialog, MessageToast, Element) {
+    "sap/ui/core/Element",
+    "plant_intelligence_dev/formatter/kpiformatter"
+], function (Controller, JSONModel, BusyDialog, MessageToast, Element, kpiformatter) {
     "use strict";
 
     return Controller.extend("plant_intelligence_dev.controller.Main", {
+        formatter: kpiformatter,
+
         onInit: function () {
             this.getView().setModel(new JSONModel({
                 selectedInsight: {
@@ -205,14 +208,14 @@ sap.ui.define([
         },
 
         _getCurrentTimeText: function () {
-            const oNow = new Date();
-            const sHours = String(oNow.getHours()).padStart(2, "0");
-            const sMinutes = String(oNow.getMinutes()).padStart(2, "0");
+            var oNow = new Date();
+            var sHours = String(oNow.getHours()).padStart(2, "0");
+            var sMinutes = String(oNow.getMinutes()).padStart(2, "0");
             return sHours + ":" + sMinutes + " today";
         },
 
         _fetchData: async function (action, bShowBusy) {
-            let oBusyDialog = null;
+            var oBusyDialog = null;
 
             if (bShowBusy) {
                 oBusyDialog = new BusyDialog({ text: "Loading..." });
@@ -220,7 +223,7 @@ sap.ui.define([
             }
 
             try {
-                const response = await fetch(`/transit-service/${action}`, {
+                var response = await fetch("/transit-service/" + action, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -228,13 +231,13 @@ sap.ui.define([
                     body: JSON.stringify({})
                 });
 
-                const contentType = response.headers.get("content-type") || "";
+                var contentType = response.headers.get("content-type") || "";
                 if (!response.ok || !contentType.includes("application/json")) {
-                    const text = await response.text();
+                    var text = await response.text();
                     throw new Error("HTTP " + response.status + ": " + text);
                 }
 
-                const data = await response.json();
+                var data = await response.json();
                 return data.value || [];
             } catch (err) {
                 MessageToast.show("Error: " + err.message);
@@ -252,18 +255,18 @@ sap.ui.define([
             }
 
             if (typeof v === "string" && v.startsWith("/Date(")) {
-                const m = v.match(/\/Date\((\d+)\)\//);
+                var m = v.match(/\/Date\((\d+)\)\//);
                 if (m) {
                     return new Date(Number(m[1]));
                 }
             }
 
-            const d = new Date(v);
+            var d = new Date(v);
             return isNaN(d.getTime()) ? null : d;
         },
 
         _toNumber: function (v) {
-            const n = parseFloat(v);
+            var n = parseFloat(v);
             return isNaN(n) ? 0 : n;
         },
 
@@ -275,8 +278,8 @@ sap.ui.define([
         },
 
         _calculateCardMetrics: function (sKey, aResults) {
-            let sValue = "0";
-            let sDelta = "0 records loaded";
+            var sValue = "0";
+            var sDelta = "0 records loaded";
 
             if (!Array.isArray(aResults) || aResults.length === 0) {
                 return {
@@ -287,87 +290,87 @@ sap.ui.define([
 
             switch (sKey) {
                 case "orderLifecycle": {
-                    const aValid = aResults.map(function (oRow) {
-                        const dStart = this._toDate(oRow.OrderCreationDate);
-                        const dEnd = this._toDate(oRow.InvoiceDate);
+                    var aValidLifecycle = aResults.map(function (oRow) {
+                        var dStart = this._toDate(oRow.OrderCreationDate);
+                        var dEnd = this._toDate(oRow.InvoiceDate);
 
                         if (!dStart || !dEnd) {
                             return null;
                         }
 
-                        const nDays = this._daysBetween(dStart, dEnd);
+                        var nDays = this._daysBetween(dStart, dEnd);
                         return nDays !== null && nDays >= 0 ? nDays : null;
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null;
                     });
 
-                    const nTotal = aValid.reduce(function (sum, nDays) {
+                    var nTotalLifecycle = aValidLifecycle.reduce(function (sum, nDays) {
                         return sum + nDays;
                     }, 0);
 
-                    const nAvg = aValid.length ? (nTotal / aValid.length) : 0;
+                    var nAvgLifecycle = aValidLifecycle.length ? (nTotalLifecycle / aValidLifecycle.length) : 0;
 
-                    sValue = nAvg.toFixed(1);
-                    sDelta = aValid.length + " lifecycle records measured";
+                    sValue = nAvgLifecycle.toFixed(1);
+                    sDelta = aValidLifecycle.length + " lifecycle records measured";
                     break;
                 }
 
                 case "onTimeDelivery": {
-                    const aValid = aResults.filter(function (oRow) {
+                    var aValidDelivery = aResults.filter(function (oRow) {
                         return !!this._toDate(oRow.PlannedDeliveryDate) &&
                                !!this._toDate(oRow.ActualGIDeliveryDate);
                     }.bind(this));
 
-                    const iTotal = aValid.length;
+                    var iTotalDelivery = aValidDelivery.length;
 
-                    const iOnTime = aValid.filter(function (oRow) {
-                        const dPlanned = this._toDate(oRow.PlannedDeliveryDate);
-                        const dActual = this._toDate(oRow.ActualGIDeliveryDate);
+                    var iOnTime = aValidDelivery.filter(function (oRow) {
+                        var dPlanned = this._toDate(oRow.PlannedDeliveryDate);
+                        var dActual = this._toDate(oRow.ActualGIDeliveryDate);
                         return dActual.getTime() <= dPlanned.getTime();
                     }.bind(this)).length;
 
-                    const nPct = iTotal ? (iOnTime / iTotal) * 100 : 0;
+                    var nPctDelivery = iTotalDelivery ? (iOnTime / iTotalDelivery) * 100 : 0;
 
-                    sValue = nPct.toFixed(1);
-                    sDelta = iOnTime + " on-time of " + iTotal + " valid deliveries";
+                    sValue = nPctDelivery.toFixed(1);
+                    sDelta = iOnTime + " on-time of " + iTotalDelivery + " valid deliveries";
                     break;
                 }
 
                 case "otif": {
-                    const aValid = aResults.filter(function (oRow) {
+                    var aValidOtif = aResults.filter(function (oRow) {
                         return !!this._toDate(oRow.PlannedDeliveryDate) &&
                                !!this._toDate(oRow.ActualGIDeliveryDate) &&
                                this._toNumber(oRow.OrderedQty) > 0 &&
                                this._toNumber(oRow.ActualDeliveryQuantity) > 0;
                     }.bind(this));
 
-                    const iTotal = aValid.length;
+                    var iTotalOtif = aValidOtif.length;
 
-                    const iOtif = aValid.filter(function (oRow) {
-                        const dPlanned = this._toDate(oRow.PlannedDeliveryDate);
-                        const dActual = this._toDate(oRow.ActualGIDeliveryDate);
-                        const bOnTime = dActual.getTime() <= dPlanned.getTime();
+                    var iOtif = aValidOtif.filter(function (oRow) {
+                        var dPlanned = this._toDate(oRow.PlannedDeliveryDate);
+                        var dActual = this._toDate(oRow.ActualGIDeliveryDate);
+                        var bOnTime = dActual.getTime() <= dPlanned.getTime();
 
-                        const nOrdered = this._toNumber(oRow.OrderedQty);
-                        const nDelivered = this._toNumber(oRow.ActualDeliveryQuantity);
-                        const bInFull = nDelivered >= nOrdered;
+                        var nOrdered = this._toNumber(oRow.OrderedQty);
+                        var nDelivered = this._toNumber(oRow.ActualDeliveryQuantity);
+                        var bInFull = nDelivered >= nOrdered;
 
                         return bOnTime && bInFull;
                     }.bind(this)).length;
 
-                    const nPct = iTotal ? (iOtif / iTotal) * 100 : 0;
+                    var nPctOtif = iTotalOtif ? (iOtif / iTotalOtif) * 100 : 0;
 
-                    sValue = nPct.toFixed(1);
-                    sDelta = iOtif + " OTIF of " + iTotal + " valid deliveries";
+                    sValue = nPctOtif.toFixed(1);
+                    sDelta = iOtif + " OTIF of " + iTotalOtif + " valid deliveries";
                     break;
                 }
 
                 case "stockShortage": {
-                    const iCount = aResults.length;
+                    var iCount = aResults.length;
 
-                    const nShortageValue = aResults.reduce(function (sum, oRow) {
-                        const nQty = this._toNumber(oRow.ShortageQty);
-                        const nPrice = this._toNumber(oRow.StandardPrice);
+                    var nShortageValue = aResults.reduce(function (sum, oRow) {
+                        var nQty = this._toNumber(oRow.ShortageQty);
+                        var nPrice = this._toNumber(oRow.StandardPrice);
                         return sum + (nQty * nPrice);
                     }.bind(this), 0);
 
@@ -377,22 +380,22 @@ sap.ui.define([
                 }
 
                 case "scheduleRisk": {
-                    const aRisk = aResults.filter(function (oRow) {
-                        const dScheduled = this._toDate(oRow.ScheduledDate);
-                        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
-                        const nPlannedQty = this._toNumber(oRow.PlannedQty);
-                        const nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
+                    var aRiskSchedule = aResults.filter(function (oRow) {
+                        var dScheduled = this._toDate(oRow.ScheduledDate);
+                        var dBasicFinish = this._toDate(oRow.BasicFinishDate);
+                        var nPlannedQty = this._toNumber(oRow.PlannedQty);
+                        var nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
 
-                        const bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
-                        const bMissingDateRisk = !dScheduled || !dBasicFinish;
-                        const bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
+                        var bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
+                        var bMissingDateRisk = !dScheduled || !dBasicFinish;
+                        var bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
 
                         return bDateRisk || bMissingDateRisk || bQtyRisk;
                     }.bind(this));
 
-                    const aDelayDays = aResults.map(function (oRow) {
-                        const dScheduled = this._toDate(oRow.ScheduledDate);
-                        const dBasicFinish = this._toDate(oRow.BasicFinishDate);
+                    var aDelayDays = aResults.map(function (oRow) {
+                        var dScheduled = this._toDate(oRow.ScheduledDate);
+                        var dBasicFinish = this._toDate(oRow.BasicFinishDate);
 
                         if (!dScheduled || !dBasicFinish) {
                             return null;
@@ -407,52 +410,49 @@ sap.ui.define([
                         return nDays !== null && nDays > 0;
                     });
 
-                    const nAvgDelay = aDelayDays.length
+                    var nAvgDelay = aDelayDays.length
                         ? aDelayDays.reduce(function (sum, nDays) {
                             return sum + nDays;
                         }, 0) / aDelayDays.length
                         : null;
 
-                    sValue = String(aRisk.length);
-                    sDelta = nAvgDelay !== null
-                        ? "Avg " + nAvgDelay.toFixed(1) + " day delay"
-                        : "Avg delay N/A";
+                    sValue = String(aRiskSchedule.length);
+                    sDelta = nAvgDelay !== null ? "Avg " + nAvgDelay.toFixed(1) + " day delay" : "Avg delay N/A";
                     break;
                 }
 
                 case "transitRisk": {
-                    const aRisk = aResults.filter(function (oRow) {
-                        const dEta = this._toDate(oRow.ETA);
-                        const dRequested = this._toDate(oRow.RequestedDeliveryDate);
+                    var aRiskTransit = aResults.filter(function (oRow) {
+                        var dEta = this._toDate(oRow.ETA);
+                        var dRequested = this._toDate(oRow.RequestedDeliveryDate);
                         return dEta && dRequested && dEta.getTime() > dRequested.getTime();
                     }.bind(this));
 
-                    const aDelayedDays = aRisk.map(function (oRow) {
-                        const dEta = this._toDate(oRow.ETA);
-                        const dRequested = this._toDate(oRow.RequestedDeliveryDate);
+                    var aDelayedDaysTransit = aRiskTransit.map(function (oRow) {
+                        var dEta = this._toDate(oRow.ETA);
+                        var dRequested = this._toDate(oRow.RequestedDeliveryDate);
                         return this._daysBetween(dRequested, dEta);
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null && nDays > 0;
                     });
 
-                    const nAvgDelay = aDelayedDays.length
-                        ? aDelayedDays.reduce(function (a, b) {
+                    var nAvgTransitDelay = aDelayedDaysTransit.length
+                        ? aDelayedDaysTransit.reduce(function (a, b) {
                             return a + b;
-                        }, 0) / aDelayedDays.length
+                        }, 0) / aDelayedDaysTransit.length
                         : 0;
 
-                    sValue = String(aRisk.length);
-                    sDelta = aRisk.length
-                        ? "ETA delayed avg " + nAvgDelay.toFixed(1) + " days"
+                    sValue = String(aRiskTransit.length);
+                    sDelta = aRiskTransit.length
+                        ? "ETA delayed avg " + nAvgTransitDelay.toFixed(1) + " days"
                         : "No delayed transit orders";
                     break;
                 }
 
-                default: {
+                default:
                     sValue = String(aResults.length);
                     sDelta = aResults.length + " records loaded";
                     break;
-                }
             }
 
             return {
@@ -462,33 +462,37 @@ sap.ui.define([
         },
 
         _loadCardByIndex: async function (iIndex, bShowBusy) {
-            const oModel = this.getView().getModel("dashboardModel");
-            const oCard = oModel.getProperty("/cards/" + iIndex);
+            var oModel = this.getView().getModel("dashboardModel");
+            var oCard = oModel.getProperty("/cards/" + iIndex);
 
             if (!oCard) {
                 return;
             }
 
-            const aResults = await this._fetchData(oCard.action, bShowBusy);
-            const oMetrics = this._calculateCardMetrics(oCard.key, aResults);
+            var aResults = await this._fetchData(oCard.action, bShowBusy);
+            var oMetrics = this._calculateCardMetrics(oCard.key, aResults);
+            var sStatusText = kpiformatter.getTargetStatusText(oCard.key, oMetrics.value);
+            var sStatusState = kpiformatter.getTargetStatusState(oCard.key, oMetrics.value);
 
             oModel.setProperty("/cards/" + iIndex + "/value", oMetrics.value);
             oModel.setProperty("/cards/" + iIndex + "/delta", oMetrics.delta);
             oModel.setProperty("/cards/" + iIndex + "/footerLeft", this._getCurrentTimeText());
+            oModel.setProperty("/cards/" + iIndex + "/statusText", sStatusText);
+            oModel.setProperty("/cards/" + iIndex + "/statusState", sStatusState);
 
-            const sSelectedKey = oModel.getProperty("/selectedInsight/key");
+            var sSelectedKey = oModel.getProperty("/selectedInsight/key");
             if (sSelectedKey === oCard.key) {
                 this._showInsightForKey(oCard.key);
             }
         },
 
         _loadAllCards: async function (bShowBusy) {
-            const oModel = this.getView().getModel("dashboardModel");
-            const aCards = oModel.getProperty("/cards") || [];
-            const bBusy = bShowBusy !== false;
+            var oModel = this.getView().getModel("dashboardModel");
+            var aCards = oModel.getProperty("/cards") || [];
+            var bBusy = bShowBusy !== false;
 
             if (bBusy) {
-                const oBusyDialog = new BusyDialog({ text: "Loading dashboard..." });
+                var oBusyDialog = new BusyDialog({ text: "Loading dashboard..." });
                 oBusyDialog.open();
 
                 try {
@@ -508,10 +512,10 @@ sap.ui.define([
         },
 
         onCardPress: async function (oEvent) {
-            const sKey = oEvent.getSource().data("cardKey");
-            const oModel = this.getView().getModel("dashboardModel");
-            const aCards = oModel.getProperty("/cards");
-            const iIndex = aCards.findIndex(function (oCard) {
+            var sKey = oEvent.getSource().data("cardKey");
+            var oModel = this.getView().getModel("dashboardModel");
+            var aCards = oModel.getProperty("/cards");
+            var iIndex = aCards.findIndex(function (oCard) {
                 return oCard.key === sKey;
             });
 
@@ -527,39 +531,39 @@ sap.ui.define([
         },
 
         _onKpiCardClick: function (oEvent) {
-            const oDomRef = oEvent.currentTarget;
-            const oControl = Element.closestTo(oDomRef);
+            var oDomRef = oEvent.currentTarget;
+            var oControl = Element.closestTo(oDomRef);
 
             if (!oControl) {
                 return;
             }
 
-            const aCustomData = oControl.getCustomData();
+            var aCustomData = oControl.getCustomData();
             if (!aCustomData || !aCustomData.length) {
                 return;
             }
 
-            const sKey = aCustomData[0].getValue();
+            var sKey = aCustomData[0].getValue();
             this._showInsightForKey(sKey);
         },
 
         _showInsightForKey: function (sKey) {
-            const oModel = this.getView().getModel("dashboardModel");
-            const aCards = oModel.getProperty("/cards");
-            const oCard = aCards.find(function (c) {
+            var oModel = this.getView().getModel("dashboardModel");
+            var aCards = oModel.getProperty("/cards");
+            var oCard = aCards.find(function (c) {
                 return c.key === sKey;
             });
-            const oMeta = this._insightMeta[sKey];
+            var oMeta = this._insightMeta[sKey];
 
             if (!oCard || !oMeta) {
                 return;
             }
 
-            const bIsGood = oCard.statusState === "Success";
-            const sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
-            const sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
+            var bIsGood = oCard.statusState === "Success";
+            var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
+            var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
 
-            const sText = oCard.title + " is currently " + oCard.value + oCard.unit +
+            var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
                 " (" + oCard.delta + "). " + oCard.footerRight + ".";
 
             oModel.setProperty("/selectedInsight", {
