@@ -107,9 +107,9 @@
                     </VBox>
 
                     <VBox class="aiSummaryColumn" width="30%" fitContainer="true">
-                        <Panel class="aiSummaryPanel" height="100%">
+                        <Panel class="aiSummaryPanel" >
                             <content>
-                                <VBox class="aiSummaryInner" height="100%">
+                                <VBox class="aiSummaryInner" >
 
                                     <HBox alignItems="Center" class="aiSummaryHeader">
                                         <core:Icon
@@ -127,8 +127,8 @@
                                         class="aiSummarySubtitle" />
 
                                     <VBox
-                                        class="aiInsightItem"
-                                        visible="{= ${dashboardModel>/selectedInsight/hasSelection} === true }">
+    class="aiInsightItem"
+    visible="{dashboardModel>/showInsight}">
 
                                         <HBox alignItems="Center" class="aiInsightHeader">
                                             <core:Icon
@@ -154,8 +154,8 @@
                                     </VBox>
 
                                     <VBox
-                                        class="aiEmptyState"
-                                        visible="{= ${dashboardModel>/selectedInsight/hasSelection} !== true }">
+    class="aiEmptyState"
+    visible="{dashboardModel>/showEmpty}">
                                         <core:Icon
                                             src="sap-icon://ai"
                                             size="2rem"
