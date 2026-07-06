@@ -236,13 +236,13 @@ selectedTileClass: "",
             var nX = Math.sin(nHash) * 10000;
             return nX - Math.floor(nX);
         },
-
+ 
         // Aggregates raw movement-level rows (from the OData export) into one
         // row per Material-Plant, adding dummy ShortageQty / StandardPrice
         // fields since the source table has neither.
         _buildShortageKpiFromRawRows: function (aRawRows) {
             var oAgg = {};
-
+ 
             aRawRows.forEach(function (oRow) {
                 var sKey = oRow.Material + "||" + oRow.Plant;
                 if (!oAgg[sKey]) {
@@ -256,22 +256,22 @@ selectedTileClass: "",
                 }
                 oAgg[sKey].RecordCount++;
             });
-
+ 
             var oMaterialPrices = {};
-
+ 
             return Object.keys(oAgg).map(function (sKey) {
                 var oItem = oAgg[sKey];
-
+ 
                 if (!oMaterialPrices[oItem.Material]) {
                     oMaterialPrices[oItem.Material] =
                         Math.round((10 + this._seededRandom(oItem.Material) * 490) * 100) / 100;
                 }
-
+ 
                 var nShortageQty = Math.round(
                     (5 + this._seededRandom(sKey + "|qty") * 995) * 100
                 ) / 100;
                 var nStandardPrice = oMaterialPrices[oItem.Material];
-
+ 
                 return {
                     Material: oItem.Material,
                     Plant: oItem.Plant,
@@ -284,65 +284,65 @@ selectedTileClass: "",
                 };
             }.bind(this));
         },
-
+ 
         _fetchLocalStockShortageData: async function () {
             try {
                 var sUrl = sap.ui.require.toUrl("plant_intelligence_dev/model/shortageKPI.json");
                 var response = await fetch(sUrl);
-
+ 
                 if (!response.ok) {
                     throw new Error("HTTP " + response.status + " loading download.json");
                 }
-
+ 
                 var data = await response.json();
-
+ 
                 // Pre-aggregated KPI shape: { ShortageKPI: { Items: [...] } }
                 if (data && data.ShortageKPI && Array.isArray(data.ShortageKPI.Items)) {
                     return data.ShortageKPI.Items;
                 }
-
+ 
                 // Raw OData export shape: { d: { results: [...] } } — aggregate
                 // by Material-Plant and add dummy ShortageQty/StandardPrice.
                 if (data && data.d && Array.isArray(data.d.results)) {
                     return this._buildShortageKpiFromRawRows(data.d.results);
                 }
-
+ 
                 if (Array.isArray(data)) {
                     // Could already be a flat array of shortage items, or raw rows.
                     var bHasShortageFields = data.length > 0 &&
                         data[0].ShortageQty !== undefined && data[0].StandardPrice !== undefined;
                     return bHasShortageFields ? data : this._buildShortageKpiFromRawRows(data);
                 }
-
+ 
                 return [];
             } catch (err) {
                 MessageToast.show("Error loading download.json: " + err.message);
                 return [];
             }
         },
-
+ 
         _fetchLocalPlannedOrderData: async function () {
             try {
                 var sUrl = sap.ui.require.toUrl("plant_intelligence_dev/model/plannedOrderSchedule.json");
                 var response = await fetch(sUrl);
-
+ 
                 if (!response.ok) {
                     throw new Error("HTTP " + response.status + " loading plannedOrderSchedule.json");
                 }
-
+ 
                 var data = await response.json();
-
+ 
                 if (data && data.d && Array.isArray(data.d.results)) {
                     return data.d.results;
                 }
-
+ 
                 return Array.isArray(data) ? data : [];
             } catch (err) {
                 MessageToast.show("Error loading plannedOrderSchedule.json: " + err.message);
                 return [];
             }
         },
-
+ 
         _fetchData: async function (action, bShowBusy) {
             var oBusyDialog = null;
  
@@ -350,24 +350,24 @@ selectedTileClass: "",
                 oBusyDialog = new BusyDialog({ text: "Loading..." });
                 oBusyDialog.open();
             }
-
+ 
             if (action === "getStockShortage") {
                 var aLocalResults = await this._fetchLocalStockShortageData();
-
+ 
                 if (oBusyDialog) {
                     oBusyDialog.close();
                 }
-
+ 
                 return aLocalResults;
             }
-
+ 
             if (action === "getPlannedOrderSchedule") {
                 var aLocalPlannedOrders = await this._fetchLocalPlannedOrderData();
-
+ 
                 if (oBusyDialog) {
                     oBusyDialog.close();
                 }
-
+ 
                 return aLocalPlannedOrders;
             }
  
@@ -524,7 +524,7 @@ selectedTileClass: "",
                     }.bind(this), 0);
  
                     var sFormattedValue = (nShortageValue / 1000000).toFixed(2) + "M";
-
+ 
                     sValue = String(iCount);
                     sDelta = "Shortage value $" + sFormattedValue;
                     break;
@@ -535,37 +535,37 @@ selectedTileClass: "",
                         var dRequired = this._toDate(oRow.RequiredFinishDate);
                         var dScheduledFinish = this._toDate(oRow.ScheduledFinishDate);
                         var sStatus = oRow.ReleaseStatus;
-
+ 
                         var bLateFinish = dRequired && dScheduledFinish &&
                             dScheduledFinish.getTime() > dRequired.getTime();
                         var bNotReleased = sStatus !== "Released";
-
+ 
                         return bLateFinish || bNotReleased;
                     }.bind(this));
-
+ 
                     var aDelayDays = aRiskSchedule.map(function (oRow) {
                         var dRequired = this._toDate(oRow.RequiredFinishDate);
                         var dScheduledFinish = this._toDate(oRow.ScheduledFinishDate);
-
+ 
                         if (!dRequired || !dScheduledFinish) {
                             return null;
                         }
-
+ 
                         if (dScheduledFinish.getTime() <= dRequired.getTime()) {
                             return null;
                         }
-
+ 
                         return this._daysBetween(dRequired, dScheduledFinish);
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null && nDays > 0;
                     });
-
+ 
                     var nAvgDelay = aDelayDays.length
                         ? aDelayDays.reduce(function (sum, nDays) {
                             return sum + nDays;
                         }, 0) / aDelayDays.length
                         : null;
-
+ 
                     sValue = String(aRiskSchedule.length);
                     sDelta = nAvgDelay !== null ? "Avg " + nAvgDelay.toFixed(1) + " day delay" : "Avg delay N/A";
                     break;
@@ -683,16 +683,16 @@ selectedTileClass: "",
         _onKpiCardClick: async function (oEvent) {
     var oDomRef = oEvent.currentTarget;
     var oControl = Element.closestTo(oDomRef);
-
+ 
     if (!oControl) {
         return;
     }
-
+ 
     var aCustomData = oControl.getCustomData();
     if (!aCustomData || !aCustomData.length) {
         return;
     }
-
+ 
     var sKey = aCustomData[0].getValue();
     await this._showInsightForKey(sKey);
 },
@@ -714,13 +714,13 @@ selectedTileClass: "",
                 additionalContext: oCard.delta || ""
             })
         });
-
+ 
         const contentType = response.headers.get("content-type") || "";
         if (!response.ok || !contentType.includes("application/json")) {
             const text = await response.text();
             throw new Error("HTTP " + response.status + ": " + text);
         }
-
+ 
         const data = await response.json();
         return data.value || data;
     } catch (err) {
@@ -736,16 +736,16 @@ _showInsightForKey: async function (sKey) {
         return c.key === sKey;
     });
     var oMeta = this._insightMeta[sKey];
-
+ 
     if (!oCard || !oMeta) {
         return;
     }
-
+ 
     aCards.forEach(function (c) {
         c.isSelected = (c.key === sKey) ? "true" : "false";
     });
     oModel.setProperty("/cards", aCards);
-
+ 
     oModel.setProperty("/selectedInsight/hasSelection", true);
     oModel.setProperty("/selectedInsight/key", sKey);
     oModel.setProperty("/selectedInsight/subtitle", "Generating AI insight...");
@@ -758,16 +758,16 @@ _showInsightForKey: async function (sKey) {
     oModel.setProperty("/showEmpty", false);
     oModel.setProperty("/hasSelectionClass", "hasSelection");
     oModel.refresh(true);
-
+ 
     try {
         var oAiSummary = await this._fetchAISummary(oCard);
-
+ 
         oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
         oModel.setProperty("/selectedInsight/title", oAiSummary.title || (oCard.title + " — " + oCard.statusText));
         oModel.setProperty("/selectedInsight/text", oAiSummary.summaryText || "No summary generated.");
         oModel.setProperty("/selectedInsight/recommendation", oAiSummary.recommendedAction || "");
         oModel.setProperty("/selectedInsight/icon", oMeta.icon);
-
+ 
         if ((oAiSummary.severity || "").toUpperCase() === "CRITICAL") {
             oModel.setProperty("/selectedInsight/iconClass", "iconRed");
         } else if ((oAiSummary.severity || "").toUpperCase() === "WATCH" || (oAiSummary.severity || "").toUpperCase() === "MONITOR") {
@@ -780,17 +780,17 @@ _showInsightForKey: async function (sKey) {
         var sFallbackRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
         var sFallbackText = oCard.title + " is currently " + oCard.value + oCard.unit +
             " (" + oCard.delta + "). " + oCard.footerRight + ".";
-
+ 
         oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
         oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
         oModel.setProperty("/selectedInsight/text", sFallbackText);
         oModel.setProperty("/selectedInsight/recommendation", sFallbackRecommendation);
         oModel.setProperty("/selectedInsight.icon", oMeta.icon);
         oModel.setProperty("/selectedInsight/iconClass", bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad);
-
+ 
 console.warn("AI summary unavailable. Using fallback insight.", err);
     }
-
+ 
     oModel.refresh(true);
 }
     });

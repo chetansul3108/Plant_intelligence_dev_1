@@ -4,7 +4,7 @@
 .kpiPage .sapMPageEnableScrolling {
     background: #eef2f5 !important;
 }
-
+ 
 /* ============ Header Toolbar ============ */
 .dashboardHeader {
     padding: 0.75rem 1.5rem !important;
@@ -14,58 +14,58 @@
     position: relative;
     z-index: 2;
 }
-
+ 
 .headerLogo {
     color: #1a2233;
 }
-
+ 
 .titleMain {
     margin-left: 0.65rem;
     color: #1a2233;
     font-size: 1.7rem !important;
     font-weight: 800 !important;
 }
-
+ 
 .aiCopilotButton {
     margin-left: 0.5rem;
     border-radius: 0.375rem;
 }
-
+ 
 .profileAvatarBlank {
     background-color: #f5f5f5;
     margin-left: 0.5rem;
 }
-
+ 
 .profileAvatarInitials {
     background-color: #2b8a76;
     color: #fff;
     margin-left: 0.5rem;
 }
-
+ 
 /* ============ Section Header ============ */
 .sectionHeaderRow {
     padding: 0 1.5rem;
     margin-top: 1.25rem;
     margin-bottom: 0.75rem;
 }
-
+ 
 .sectionTitle {
     color: #1a2233;
     font-size: 1.05rem !important;
     font-weight: 700 !important;
 }
-
+ 
 .sectionSubtitle {
     color: #8b96a5;
     font-size: 0.8rem;
     margin-top: 0.15rem;
 }
-
+ 
 .sectionUpdated {
     color: #9aa5b3;
     font-size: 0.78rem;
 }
-
+ 
 /* ============ Main Two-Column Row ============ */
 .dashboardMainRow {
     padding: 0 1.1rem 1.2rem;
@@ -74,13 +74,13 @@
     gap: 1rem;
     align-items: stretch;
 }
-
+ 
 .kpiColumn {
     flex: 0 0 56%;
     max-width: 56%;
     box-sizing: border-box;
 }
-
+ 
 .aiSummaryColumn {
     flex: 0 0 44%;
     max-width: 44%;
@@ -89,7 +89,7 @@
     flex-direction: column;
     padding-top: 0.4rem;
 }
-
+ 
 /* ============ KPI Grid ============ */
 .kpiGrid {
     width: 100%;
@@ -97,41 +97,41 @@
     box-sizing: border-box;
     height: 100%;
 }
-
+ 
 .kpiGrid > div {
     padding: 0.4rem !important;
     box-sizing: border-box;
     display: block;
 }
-
+ 
 .kpiGrid > div > .kpiCardWrapper {
     width: 100% !important;
     display: block;
     height: 100%;
 }
-
+ 
 .kpiGrid .sapUiRespGridSpanXL6,
 .kpiGrid .sapUiRespGridSpanL6,
 .kpiGrid .sapUiRespGridSpanM6,
 .kpiGrid .sapUiRespGridSpanS12 {
     box-sizing: border-box;
 }
-
+ 
 /* ============ KPI Card Wrapper ============ */
 .kpiCardWrapper {
     cursor: pointer;
     width: 100%;
     transition: transform 0.12s ease, opacity 0.2s ease, filter 0.2s ease;
 }
-
+ 
 .kpiCardWrapper:hover {
     transform: translateY(-2px);
 }
-
+ 
 .kpiCardWrapper:hover .kpiTile {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
 }
-
+ 
 /* Selected state without layout shift */
 .kpiCardWrapper[data-selected="true"] .kpiTile {
     border-color: #4d5bf9 !important;
@@ -139,24 +139,24 @@
         inset 0 0 0 2px rgba(77, 91, 249, 0.75),
         0 1px 3px rgba(0, 0, 0, 0.04) !important;
 }
-
+ 
 .kpiCardWrapper[data-selected="true"]:hover .kpiTile {
     box-shadow:
         inset 0 0 0 2px rgba(77, 91, 249, 0.75),
         0 4px 10px rgba(0, 0, 0, 0.08) !important;
 }
-
+ 
 /* Optional dimming after selection */
 .kpiGrid.hasSelection .kpiCardWrapper[data-selected="false"] {
     opacity: 0.72;
     filter: saturate(0.78);
 }
-
+ 
 .kpiGrid.hasSelection .kpiCardWrapper[data-selected="false"]:hover {
     opacity: 0.92;
     filter: saturate(0.92);
 }
-
+ 
 /* ============ KPI Tile ============ */
 .kpiTile {
     position: relative;
@@ -170,14 +170,14 @@
     overflow: hidden;
     transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
-
+ 
 .kpiTile .sapMPanelContent {
     background: transparent !important;
     border-bottom: none !important;
     padding: 0 !important;
     height: 100%;
 }
-
+ 
 .kpiTileInner {
     position: relative;
     height: 100%;
@@ -185,62 +185,62 @@
     display: flex;
     flex-direction: column;
 }
-
+ 
 /* ============ Accent Colors ============ */
 .accentGreen {
     border-top-color: #22aa7c !important;
 }
-
+ 
 .accentAmber {
     border-top-color: #de9c17 !important;
 }
-
+ 
 .accentRed {
     border-top-color: #df4a4a !important;
 }
-
+ 
 .accentBlue {
     border-top-color: #4d84e8 !important;
 }
-
+ 
 /* ============ Top Row ============ */
 .kpiTopRow {
     margin-bottom: 0.45rem;
 }
-
+ 
 .kpiIconBox {
     width: 24px;
     height: 24px;
     border-radius: 6px;
 }
-
+ 
 .iconGreen {
     background: #cdeedc;
 }
-
+ 
 .iconAmber {
     background: #f3e7b7;
 }
-
+ 
 .iconRed {
     background: #efd6d6;
 }
-
+ 
 .iconBlue {
     background: #d8e5f8;
 }
-
+ 
 .kpiStatusBadge {
     border-radius: 999px !important;
     font-size: 0.62rem !important;
 }
-
+ 
 /* ============ Body ============ */
 .kpiBodyBlock {
     margin-bottom: 0;
     flex: 1;
 }
-
+ 
 .kpiTitle {
     color: #99a4b5;
     font-size: 0.72rem;
@@ -253,12 +253,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+ 
 .kpiValueRow {
     gap: 0.15rem;
     margin-bottom: 0.2rem;
 }
-
+ 
 .kpiValue {
     font-size: 1.7rem;
     line-height: 1;
@@ -266,14 +266,14 @@
     color: #0f1830;
     font-family: "Times New Roman", Times, serif;
 }
-
+ 
 .kpiUnit {
     font-size: 0.9rem;
     color: #5f6e83;
     font-family: "Times New Roman", Times, serif;
     padding-bottom: 0.1rem;
 }
-
+ 
 .kpiDeltaText {
     font-size: 0.76rem;
     line-height: 1.3;
@@ -284,25 +284,25 @@
     text-overflow: ellipsis;
     display: block;
 }
-
+ 
 .deltaGreen {
     color: #1a9d72;
 }
-
+ 
 .deltaAmber {
     color: #c48011;
 }
-
+ 
 .deltaRed {
     color: #cd4343;
 }
-
+ 
 /* ============ Footer ============ */
 .kpiFooterRow {
     margin-top: auto;
     padding-top: 0.35rem;
 }
-
+ 
 .kpiFooterLeft,
 .kpiFooterRight {
     font-size: 0.7rem;
@@ -310,11 +310,11 @@
     line-height: 1.2;
     font-family: "Times New Roman", Times, serif;
 }
-
+ 
 .kpiFooterRight {
     text-align: right;
 }
-
+ 
 /* ============ AI Summary Panel ============ */
 .aiSummaryPanel {
     width: 100%;
@@ -330,7 +330,7 @@
     flex-direction: column;
     flex: 1 1 auto;
 }
-
+ 
 .aiSummaryPanel .sapMPanelContent {
     background: transparent !important;
     border-bottom: none !important;
@@ -340,7 +340,7 @@
     flex-direction: column;
     flex: 1;
 }
-
+ 
 .aiSummaryInner {
     height: 100%;
     min-height: 100%;
@@ -350,80 +350,80 @@
     box-sizing: border-box;
     flex: 1;
 }
-
+ 
 .aiSummaryIcon {
     color: #4d5bf9;
     margin-right: 0.5rem;
 }
-
+ 
 .aiSummaryTitle {
     font-size: 1.1rem !important;
     color: #1a2233;
 }
-
+ 
 .aiSummarySubtitle {
     color: #8b96a5;
     font-size: 0.82rem;
     margin-bottom: 1.1rem;
 }
-
+ 
 /* Insight shown after selecting a card */
 .aiInsightItem {
     padding: 0.8rem 0;
     border-top: 1px solid #eef1f4;
 }
-
+ 
 .aiInsightHeader {
     margin-bottom: 0.45rem;
 }
-
+ 
 .aiInsightIcon {
     font-size: 0.9rem;
     margin-right: 0.55rem;
     border-radius: 5px;
     padding: 0.32rem;
 }
-
+ 
 .aiInsightIcon.iconRed {
     background: #efd6d6;
     color: #df4a4a;
 }
-
+ 
 .aiInsightIcon.iconAmber {
     background: #f3e7b7;
     color: #de9c17;
 }
-
+ 
 .aiInsightIcon.iconBlue {
     background: #d8e5f8;
     color: #4d84e8;
 }
-
+ 
 .aiInsightIcon.iconGreen {
     background: #cdeedc;
     color: #22aa7c;
 }
-
+ 
 .aiInsightTitle {
     font-size: 0.92rem;
     font-weight: 700;
     color: #1a2233;
 }
-
+ 
 .aiInsightText {
     font-size: 0.83rem;
     color: #6b7686;
     line-height: 1.5;
     margin-top: 0.25rem;
 }
-
+ 
 .aiRecommendBlock {
     margin-top: 0.9rem;
     padding: 0.7rem 0.85rem;
     background: #f4f6fb;
     border-radius: 8px;
 }
-
+ 
 .aiRecommendLabel {
     font-size: 0.65rem;
     font-weight: 700;
@@ -431,13 +431,13 @@
     color: #7c8798;
     margin-bottom: 0.28rem;
 }
-
+ 
 .aiRecommendText {
     font-size: 0.82rem;
     color: #2f3947;
     line-height: 1.45;
 }
-
+ 
 /* Empty state before any card is selected */
 .aiEmptyState {
     flex: 1;
@@ -446,70 +446,70 @@
     text-align: center;
     padding: 2rem 1rem;
 }
-
+ 
 .aiEmptyIcon {
     color: #c7cedb;
     margin-bottom: 0.75rem;
 }
-
+ 
 .aiEmptyText {
     color: #9aa5b3;
     font-size: 0.85rem;
     max-width: 13rem;
 }
-
+ 
 .aiSummaryButton {
     margin-top: auto;
     align-self: stretch;
     border-radius: 0.375rem;
 }
-
+ 
 /* ============ Responsive ============ */
 @media (max-width: 1200px) {
     .kpiTile {
         height: 118px;
     }
-
+ 
     .kpiValue {
         font-size: 1.55rem;
     }
 }
-
+ 
 @media (max-width: 900px) {
     .dashboardMainRow {
         flex-wrap: wrap;
     }
-
+ 
     .kpiColumn,
     .aiSummaryColumn {
         flex: 0 0 100%;
         max-width: 100%;
     }
-
+ 
     .aiSummaryColumn {
         margin-top: 1rem;
         padding-top: 0;
     }
 }
-
+ 
 @media (max-width: 768px) {
     .sectionHeaderRow {
         padding: 0 1rem;
     }
-
+ 
     .dashboardMainRow {
         padding: 0 0.8rem 1rem;
     }
-
+ 
     .kpiTile {
         height: 115px;
     }
-
+ 
     .kpiTileInner {
         padding: 0.65rem 0.8rem 0.6rem;
     }
-
+ 
     .kpiValue {
         font-size: 1.4rem;
-    }
+  }
 }
