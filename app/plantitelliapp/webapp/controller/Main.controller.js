@@ -13,17 +13,19 @@ sap.ui.define([
  
         onInit: function () {
             this.getView().setModel(new JSONModel({
-                hasSelectionClass: "",
-                selectedInsight: {
-                    hasSelection: false,
-                    key: "",
-                    subtitle: "Real-time performance across all plants",
-                    title: "",
-                    text: "",
-                    icon: "",
-                    iconClass: "",
-                    recommendation: ""
-                },
+    hasSelectionClass: "",
+    showInsight: false,
+    showEmpty: true,
+    selectedInsight: {
+        hasSelection: false,
+        key: "",
+        subtitle: "Real-time performance across all plants",
+        title: "",
+        text: "",
+        icon: "",
+        iconClass: "",
+        recommendation: ""
+    },
                 cards: [
                     {
                         key: "onTimeDelivery",
@@ -548,44 +550,44 @@ sap.ui.define([
             this._showInsightForKey(sKey);
         },
  
-        _showInsightForKey: function (sKey) {
-            var oModel = this.getView().getModel("dashboardModel");
-            var aCards = oModel.getProperty("/cards");
-            var oCard = aCards.find(function (c) {
-                return c.key === sKey;
-            });
-            var oMeta = this._insightMeta[sKey];
- 
-            if (!oCard || !oMeta) {
-                return;
-            }
- 
-            var bIsGood = oCard.statusState === "Success";
-            var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
-            var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
- 
-            var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
-                " (" + oCard.delta + "). " + oCard.footerRight + ".";
- 
-            oModel.setProperty("/selectedInsight", {
-                hasSelection: true,
-                key: sKey,
-                subtitle: "Insight for selected KPI",
-                title: oCard.title + " — " + oCard.statusText,
-                text: sText,
-                icon: oMeta.icon,
-                iconClass: sIconClass,
-                recommendation: sRecommendation
-            });
- 
-            // Toggle a class on the grid so unselected tiles can be dimmed
-            // via CSS (.kpiGrid.hasSelection .kpiTile:not(.kpiTileSelected))
-            oModel.setProperty("/hasSelectionClass", "hasSelection");
- 
-            aCards.forEach(function (c) {
-                c.selectedClass = (c.key === sKey) ? "kpiTileSelected" : "";
-            });
-            oModel.setProperty("/cards", aCards);
-        }
+      _showInsightForKey: function (sKey) {
+    var oModel = this.getView().getModel("dashboardModel");
+    var aCards = oModel.getProperty("/cards");
+    var oCard = aCards.find(function (c) {
+        return c.key === sKey;
+    });
+    var oMeta = this._insightMeta[sKey];
+
+    if (!oCard || !oMeta) {
+        return;
+    }
+
+    var bIsGood = oCard.statusState === "Success";
+    var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
+    var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
+
+    var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
+        " (" + oCard.delta + "). " + oCard.footerRight + ".";
+
+    oModel.setProperty("/selectedInsight/hasSelection", true);
+    oModel.setProperty("/selectedInsight/key", sKey);
+    oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
+    oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
+    oModel.setProperty("/selectedInsight/text", sText);
+    oModel.setProperty("/selectedInsight/icon", oMeta.icon);
+    oModel.setProperty("/selectedInsight/iconClass", sIconClass);
+    oModel.setProperty("/selectedInsight/recommendation", sRecommendation);
+
+    oModel.setProperty("/showInsight", true);
+    oModel.setProperty("/showEmpty", false);
+    oModel.setProperty("/hasSelectionClass", "hasSelection");
+
+    aCards.forEach(function (c) {
+        c.selectedClass = (c.key === sKey) ? "kpiTileSelected" : "";
+    });
+
+    oModel.setProperty("/cards", aCards);
+    oModel.refresh(true);
+}
     });
 });
