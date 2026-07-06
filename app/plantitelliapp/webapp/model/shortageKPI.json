@@ -1,0 +1,1231 @@
+{
+  "ShortageKPI": {
+    "CountOfMaterialPlantShortages": 122,
+    "TotalShortageValue": 16131136.63,
+    "Currency": "USD",
+    "GeneratedOn": "2026-07-02",
+    "Note": "ShortageQty and StandardPrice are dummy/mock fields added for KPI demo purposes; not present in source data.",
+    "Items": [
+      {
+        "Material": "SOFASET_1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 926.74,
+        "StandardPrice": 484.81,
+        "Currency": "USD",
+        "ShortageValue": 449292.82
+      },
+      {
+        "Material": "BATCHMAT2",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 861.48,
+        "StandardPrice": 485.83,
+        "Currency": "USD",
+        "ShortageValue": 418532.83
+      },
+      {
+        "Material": "YASH_TEST_ABC",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 836.85,
+        "StandardPrice": 499.65,
+        "Currency": "USD",
+        "ShortageValue": 418132.1
+      },
+      {
+        "Material": "QIMAT55",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 947.21,
+        "StandardPrice": 440.22,
+        "Currency": "USD",
+        "ShortageValue": 416980.79
+      },
+      {
+        "Material": "558",
+        "Plant": "NL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "KG",
+        "ShortageQty": 876.99,
+        "StandardPrice": 472.03,
+        "Currency": "USD",
+        "ShortageValue": 413965.59
+      },
+      {
+        "Material": "ABC_TEST3",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 860.34,
+        "StandardPrice": 453.66,
+        "Currency": "USD",
+        "ShortageValue": 390301.84
+      },
+      {
+        "Material": "QMMAT1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 832.51,
+        "StandardPrice": 440.57,
+        "Currency": "USD",
+        "ShortageValue": 366778.93
+      },
+      {
+        "Material": "YASH_LOCATION1",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 862.4,
+        "StandardPrice": 416.41,
+        "Currency": "USD",
+        "ShortageValue": 359111.98
+      },
+      {
+        "Material": "YASH_ABC",
+        "Plant": "1001",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 670.63,
+        "StandardPrice": 486.83,
+        "Currency": "USD",
+        "ShortageValue": 326482.8
+      },
+      {
+        "Material": "YASH_AATP_ABC1",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 808.46,
+        "StandardPrice": 394.46,
+        "Currency": "USD",
+        "ShortageValue": 318905.13
+      },
+      {
+        "Material": "YASH_ABC_AATP",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 649.8,
+        "StandardPrice": 468.96,
+        "Currency": "USD",
+        "ShortageValue": 304730.21
+      },
+      {
+        "Material": "YASH_FG2",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 731.08,
+        "StandardPrice": 405.49,
+        "Currency": "USD",
+        "ShortageValue": 296445.63
+      },
+      {
+        "Material": "513",
+        "Plant": "PRTH",
+        "CompanyCode": "DS01",
+        "BaseUnit": "KG",
+        "ShortageQty": 843.64,
+        "StandardPrice": 345.46,
+        "Currency": "USD",
+        "ShortageValue": 291443.87
+      },
+      {
+        "Material": "PM-FG-SLED",
+        "Plant": "PL02",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 699.65,
+        "StandardPrice": 404.85,
+        "Currency": "USD",
+        "ShortageValue": 283253.3
+      },
+      {
+        "Material": "MRB_TEST",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 640.75,
+        "StandardPrice": 436.55,
+        "Currency": "USD",
+        "ShortageValue": 279719.41
+      },
+      {
+        "Material": "SOFA-TABLE_2S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 557.99,
+        "StandardPrice": 497.76,
+        "Currency": "USD",
+        "ShortageValue": 277745.1
+      },
+      {
+        "Material": "YASH_ABC",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 554.28,
+        "StandardPrice": 486.83,
+        "Currency": "USD",
+        "ShortageValue": 269840.13
+      },
+      {
+        "Material": "MB_TEST3",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 573.19,
+        "StandardPrice": 468.4,
+        "Currency": "USD",
+        "ShortageValue": 268482.2
+      },
+      {
+        "Material": "BATCHMAT1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 531.47,
+        "StandardPrice": 498.1,
+        "Currency": "USD",
+        "ShortageValue": 264725.21
+      },
+      {
+        "Material": "YASH_LOCATION1",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 620.43,
+        "StandardPrice": 416.41,
+        "Currency": "USD",
+        "ShortageValue": 258353.26
+      },
+      {
+        "Material": "YASH_TESTQT",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 605.71,
+        "StandardPrice": 425.27,
+        "Currency": "USD",
+        "ShortageValue": 257590.29
+      },
+      {
+        "Material": "ZMAT100",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 511.98,
+        "StandardPrice": 498.79,
+        "Currency": "USD",
+        "ShortageValue": 255370.5
+      },
+      {
+        "Material": "T-T100",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 678.32,
+        "StandardPrice": 370.87,
+        "Currency": "USD",
+        "ShortageValue": 251568.54
+      },
+      {
+        "Material": "SOFA-CUSHION",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 675.0,
+        "StandardPrice": 367.25,
+        "Currency": "USD",
+        "ShortageValue": 247893.75
+      },
+      {
+        "Material": "YASH_LOCATION1",
+        "Plant": "1005",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 579.47,
+        "StandardPrice": 416.41,
+        "Currency": "USD",
+        "ShortageValue": 241297.1
+      },
+      {
+        "Material": "MB_TEST",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 913.06,
+        "StandardPrice": 255.29,
+        "Currency": "USD",
+        "ShortageValue": 233095.09
+      },
+      {
+        "Material": "QMMAT3",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 954.05,
+        "StandardPrice": 232.32,
+        "Currency": "USD",
+        "ShortageValue": 221644.9
+      },
+      {
+        "Material": "YASH_FG2",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 538.55,
+        "StandardPrice": 405.49,
+        "Currency": "USD",
+        "ShortageValue": 218376.64
+      },
+      {
+        "Material": "PRD003",
+        "Plant": "SY90",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 461.56,
+        "StandardPrice": 458.13,
+        "Currency": "USD",
+        "ShortageValue": 211454.48
+      },
+      {
+        "Material": "WATER",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "M3",
+        "ShortageQty": 532.7,
+        "StandardPrice": 391.53,
+        "Currency": "USD",
+        "ShortageValue": 208568.03
+      },
+      {
+        "Material": "SOFA-CUSHION_2S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 957.53,
+        "StandardPrice": 217.27,
+        "Currency": "USD",
+        "ShortageValue": 208042.54
+      },
+      {
+        "Material": "YBOX",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 541.68,
+        "StandardPrice": 383.63,
+        "Currency": "USD",
+        "ShortageValue": 207804.7
+      },
+      {
+        "Material": "COMP02",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 862.04,
+        "StandardPrice": 227.13,
+        "Currency": "USD",
+        "ShortageValue": 195795.15
+      },
+      {
+        "Material": "MAT1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 989.58,
+        "StandardPrice": 195.93,
+        "Currency": "USD",
+        "ShortageValue": 193888.41
+      },
+      {
+        "Material": "YASH_TEST_ABC",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 382.08,
+        "StandardPrice": 499.65,
+        "Currency": "USD",
+        "ShortageValue": 190906.27
+      },
+      {
+        "Material": "COMP-02",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 426.02,
+        "StandardPrice": 437.49,
+        "Currency": "USD",
+        "ShortageValue": 186379.49
+      },
+      {
+        "Material": "YASH_ABC",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 381.64,
+        "StandardPrice": 486.83,
+        "Currency": "USD",
+        "ShortageValue": 185793.8
+      },
+      {
+        "Material": "SERMAT5",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 539.29,
+        "StandardPrice": 344.04,
+        "Currency": "USD",
+        "ShortageValue": 185537.33
+      },
+      {
+        "Material": "TG12",
+        "Plant": "1010",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 402.4,
+        "StandardPrice": 449.93,
+        "Currency": "USD",
+        "ShortageValue": 181051.83
+      },
+      {
+        "Material": "MAT2",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 559.16,
+        "StandardPrice": 323.6,
+        "Currency": "USD",
+        "ShortageValue": 180944.18
+      },
+      {
+        "Material": "SOFA-COVER_2S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 457.73,
+        "StandardPrice": 394.19,
+        "Currency": "USD",
+        "ShortageValue": 180432.59
+      },
+      {
+        "Material": "T-FIX100",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 547.22,
+        "StandardPrice": 328.44,
+        "Currency": "USD",
+        "ShortageValue": 179728.94
+      },
+      {
+        "Material": "623",
+        "Plant": "QN95",
+        "CompanyCode": "DS01",
+        "BaseUnit": "KG",
+        "ShortageQty": 425.05,
+        "StandardPrice": 398.12,
+        "Currency": "USD",
+        "ShortageValue": 169220.91
+      },
+      {
+        "Material": "PM-FG-INTCH1",
+        "Plant": "PL02",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 339.91,
+        "StandardPrice": 479.03,
+        "Currency": "USD",
+        "ShortageValue": 162827.09
+      },
+      {
+        "Material": "COMP-202",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 995.17,
+        "StandardPrice": 162.74,
+        "Currency": "USD",
+        "ShortageValue": 161953.97
+      },
+      {
+        "Material": "SOFA-CUSHION_3S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 544.48,
+        "StandardPrice": 293.8,
+        "Currency": "USD",
+        "ShortageValue": 159968.22
+      },
+      {
+        "Material": "ABC_TEST2",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 475.31,
+        "StandardPrice": 319.24,
+        "Currency": "USD",
+        "ShortageValue": 151737.96
+      },
+      {
+        "Material": "SOFA-COVER_3S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 968.87,
+        "StandardPrice": 155.39,
+        "Currency": "USD",
+        "ShortageValue": 150552.71
+      },
+      {
+        "Material": "TABLE",
+        "Plant": "CLT1",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 505.34,
+        "StandardPrice": 296.25,
+        "Currency": "USD",
+        "ShortageValue": 149706.98
+      },
+      {
+        "Material": "COMP-51",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 440.91,
+        "StandardPrice": 328.44,
+        "Currency": "USD",
+        "ShortageValue": 144812.48
+      },
+      {
+        "Material": "SOFASET_2S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 268.88,
+        "StandardPrice": 492.8,
+        "Currency": "USD",
+        "ShortageValue": 132504.06
+      },
+      {
+        "Material": "MRB_TEST",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 301.95,
+        "StandardPrice": 436.55,
+        "Currency": "USD",
+        "ShortageValue": 131816.27
+      },
+      {
+        "Material": "PRD003",
+        "Plant": "GL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 268.56,
+        "StandardPrice": 458.13,
+        "Currency": "USD",
+        "ShortageValue": 123035.39
+      },
+      {
+        "Material": "COMP01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 923.65,
+        "StandardPrice": 132.41,
+        "Currency": "USD",
+        "ShortageValue": 122300.5
+      },
+      {
+        "Material": "QMMAT4",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 267.07,
+        "StandardPrice": 439.17,
+        "Currency": "USD",
+        "ShortageValue": 117289.13
+      },
+      {
+        "Material": "KITCOMP-01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 252.41,
+        "StandardPrice": 432.22,
+        "Currency": "USD",
+        "ShortageValue": 109096.65
+      },
+      {
+        "Material": "PRD001",
+        "Plant": "QN95",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 657.16,
+        "StandardPrice": 164.19,
+        "Currency": "USD",
+        "ShortageValue": 107899.1
+      },
+      {
+        "Material": "SOFA-COVER",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 469.69,
+        "StandardPrice": 217.55,
+        "Currency": "USD",
+        "ShortageValue": 102181.06
+      },
+      {
+        "Material": "YASH_LOCATION1",
+        "Plant": "PL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 231.76,
+        "StandardPrice": 416.41,
+        "Currency": "USD",
+        "ShortageValue": 96507.18
+      },
+      {
+        "Material": "BE-001",
+        "Plant": "PL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 637.51,
+        "StandardPrice": 146.21,
+        "Currency": "USD",
+        "ShortageValue": 93210.34
+      },
+      {
+        "Material": "PT-1001506_1",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 232.9,
+        "StandardPrice": 390.24,
+        "Currency": "USD",
+        "ShortageValue": 90886.9
+      },
+      {
+        "Material": "SERMAT6",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 642.76,
+        "StandardPrice": 140.74,
+        "Currency": "USD",
+        "ShortageValue": 90462.04
+      },
+      {
+        "Material": "T-T100",
+        "Plant": "PL37",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 223.22,
+        "StandardPrice": 370.87,
+        "Currency": "USD",
+        "ShortageValue": 82785.6
+      },
+      {
+        "Material": "T-T601",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 586.66,
+        "StandardPrice": 138.74,
+        "Currency": "USD",
+        "ShortageValue": 81393.21
+      },
+      {
+        "Material": "COMP-101",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 205.15,
+        "StandardPrice": 367.67,
+        "Currency": "USD",
+        "ShortageValue": 75427.5
+      },
+      {
+        "Material": "COMP-01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 268.73,
+        "StandardPrice": 279.4,
+        "Currency": "USD",
+        "ShortageValue": 75083.16
+      },
+      {
+        "Material": "ABC_TEST2",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 232.8,
+        "StandardPrice": 319.24,
+        "Currency": "USD",
+        "ShortageValue": 74319.07
+      },
+      {
+        "Material": "T-F101",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 563.56,
+        "StandardPrice": 130.85,
+        "Currency": "USD",
+        "ShortageValue": 73741.83
+      },
+      {
+        "Material": "SOFA-COVER_1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 170.48,
+        "StandardPrice": 425.86,
+        "Currency": "USD",
+        "ShortageValue": 72600.61
+      },
+      {
+        "Material": "SOFASET",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 342.61,
+        "StandardPrice": 207.28,
+        "Currency": "USD",
+        "ShortageValue": 71016.2
+      },
+      {
+        "Material": "YASH_LOCATION2",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 373.33,
+        "StandardPrice": 188.77,
+        "Currency": "USD",
+        "ShortageValue": 70473.5
+      },
+      {
+        "Material": "TD_FG_100",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 591.32,
+        "StandardPrice": 118.02,
+        "Currency": "USD",
+        "ShortageValue": 69787.59
+      },
+      {
+        "Material": "COMP-62",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 233.96,
+        "StandardPrice": 298.27,
+        "Currency": "USD",
+        "ShortageValue": 69783.25
+      },
+      {
+        "Material": "PRD001",
+        "Plant": "NL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 398.65,
+        "StandardPrice": 164.19,
+        "Currency": "USD",
+        "ShortageValue": 65454.34
+      },
+      {
+        "Material": "PRD001",
+        "Plant": "4070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 384.71,
+        "StandardPrice": 164.19,
+        "Currency": "USD",
+        "ShortageValue": 63165.53
+      },
+      {
+        "Material": "HEADER-01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 541.6,
+        "StandardPrice": 113.78,
+        "Currency": "USD",
+        "ShortageValue": 61623.25
+      },
+      {
+        "Material": "DOCBATCH1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 167.59,
+        "StandardPrice": 367.27,
+        "Currency": "USD",
+        "ShortageValue": 61550.78
+      },
+      {
+        "Material": "KITHEADER-01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 282.15,
+        "StandardPrice": 216.72,
+        "Currency": "USD",
+        "ShortageValue": 61147.55
+      },
+      {
+        "Material": "183",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 507.83,
+        "StandardPrice": 117.13,
+        "Currency": "USD",
+        "ShortageValue": 59482.13
+      },
+      {
+        "Material": "SOFASET_3S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 159.02,
+        "StandardPrice": 362.02,
+        "Currency": "USD",
+        "ShortageValue": 57568.42
+      },
+      {
+        "Material": "PM-FG-FC",
+        "Plant": "PL02",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 175.28,
+        "StandardPrice": 308.47,
+        "Currency": "USD",
+        "ShortageValue": 54068.62
+      },
+      {
+        "Material": "SOFA-CUSHION_1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 217.68,
+        "StandardPrice": 247.96,
+        "Currency": "USD",
+        "ShortageValue": 53975.93
+      },
+      {
+        "Material": "TD_FG_03",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 132.75,
+        "StandardPrice": 385.26,
+        "Currency": "USD",
+        "ShortageValue": 51143.26
+      },
+      {
+        "Material": "SOFA-TABLE",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 102.93,
+        "StandardPrice": 492.24,
+        "Currency": "USD",
+        "ShortageValue": 50666.26
+      },
+      {
+        "Material": "QIMAT1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 157.08,
+        "StandardPrice": 308.4,
+        "Currency": "USD",
+        "ShortageValue": 48443.47
+      },
+      {
+        "Material": "MB_TEST",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 182.76,
+        "StandardPrice": 255.29,
+        "Currency": "USD",
+        "ShortageValue": 46656.8
+      },
+      {
+        "Material": "KITCOMP-02",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 451.37,
+        "StandardPrice": 103.2,
+        "Currency": "USD",
+        "ShortageValue": 46581.38
+      },
+      {
+        "Material": "YASH_AATP_ABC2",
+        "Plant": "1720",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 433.9,
+        "StandardPrice": 103.3,
+        "Currency": "USD",
+        "ShortageValue": 44821.87
+      },
+      {
+        "Material": "COMP-61",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 341.4,
+        "StandardPrice": 120.1,
+        "Currency": "USD",
+        "ShortageValue": 41002.14
+      },
+      {
+        "Material": "T-T400",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 91.5,
+        "StandardPrice": 447.17,
+        "Currency": "USD",
+        "ShortageValue": 40916.06
+      },
+      {
+        "Material": "619",
+        "Plant": "QN95",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 629.31,
+        "StandardPrice": 63.73,
+        "Currency": "USD",
+        "ShortageValue": 40105.93
+      },
+      {
+        "Material": "TD_FG_02",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 761.8,
+        "StandardPrice": 43.91,
+        "Currency": "USD",
+        "ShortageValue": 33450.64
+      },
+      {
+        "Material": "COMP-52",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 125.4,
+        "StandardPrice": 263.61,
+        "Currency": "USD",
+        "ShortageValue": 33056.69
+      },
+      {
+        "Material": "TD_SF_18",
+        "Plant": "PL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 227.09,
+        "StandardPrice": 144.76,
+        "Currency": "USD",
+        "ShortageValue": 32873.55
+      },
+      {
+        "Material": "T-TB100",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 270.64,
+        "StandardPrice": 112.66,
+        "Currency": "USD",
+        "ShortageValue": 30490.3
+      },
+      {
+        "Material": "PT-1001527_1",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 214.93,
+        "StandardPrice": 141.19,
+        "Currency": "USD",
+        "ShortageValue": 30345.97
+      },
+      {
+        "Material": "TG0011",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 437.59,
+        "StandardPrice": 64.66,
+        "Currency": "USD",
+        "ShortageValue": 28294.57
+      },
+      {
+        "Material": "T-T600",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 159.7,
+        "StandardPrice": 176.72,
+        "Currency": "USD",
+        "ShortageValue": 28222.18
+      },
+      {
+        "Material": "TD_FG_01",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 488.56,
+        "StandardPrice": 51.97,
+        "Currency": "USD",
+        "ShortageValue": 25390.46
+      },
+      {
+        "Material": "SOFA-TABLE_3S",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 61.88,
+        "StandardPrice": 376.51,
+        "Currency": "USD",
+        "ShortageValue": 23298.44
+      },
+      {
+        "Material": "TD_FG_02",
+        "Plant": "PL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 477.91,
+        "StandardPrice": 43.91,
+        "Currency": "USD",
+        "ShortageValue": 20985.03
+      },
+      {
+        "Material": "ABMAT01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 929.45,
+        "StandardPrice": 19.54,
+        "Currency": "USD",
+        "ShortageValue": 18161.45
+      },
+      {
+        "Material": "TD_FG_07",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 50.6,
+        "StandardPrice": 355.24,
+        "Currency": "USD",
+        "ShortageValue": 17975.14
+      },
+      {
+        "Material": "MB_TEST4",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 136.65,
+        "StandardPrice": 114.98,
+        "Currency": "USD",
+        "ShortageValue": 15712.02
+      },
+      {
+        "Material": "HEADER01",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 55.34,
+        "StandardPrice": 279.66,
+        "Currency": "USD",
+        "ShortageValue": 15476.38
+      },
+      {
+        "Material": "WR-001",
+        "Plant": "PL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 105.5,
+        "StandardPrice": 124.07,
+        "Currency": "USD",
+        "ShortageValue": 13089.38
+      },
+      {
+        "Material": "SOFA-TABLE_1",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 63.34,
+        "StandardPrice": 206.51,
+        "Currency": "USD",
+        "ShortageValue": 13080.34
+      },
+      {
+        "Material": "CF-001",
+        "Plant": "PL01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "EA",
+        "ShortageQty": 84.39,
+        "StandardPrice": 151.8,
+        "Currency": "USD",
+        "ShortageValue": 12810.4
+      },
+      {
+        "Material": "SERMAT4",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 722.12,
+        "StandardPrice": 15.63,
+        "Currency": "USD",
+        "ShortageValue": 11286.74
+      },
+      {
+        "Material": "PRD001",
+        "Plant": "3070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 68.21,
+        "StandardPrice": 164.19,
+        "Currency": "USD",
+        "ShortageValue": 11199.4
+      },
+      {
+        "Material": "FIN-60",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 241.81,
+        "StandardPrice": 44.72,
+        "Currency": "USD",
+        "ShortageValue": 10813.74
+      },
+      {
+        "Material": "YASH_AATP_ABC2",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 101.45,
+        "StandardPrice": 103.3,
+        "Currency": "USD",
+        "ShortageValue": 10479.78
+      },
+      {
+        "Material": "QIMAT22",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 62.64,
+        "StandardPrice": 160.68,
+        "Currency": "USD",
+        "ShortageValue": 10065.0
+      },
+      {
+        "Material": "T-F200",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 29.89,
+        "StandardPrice": 323.32,
+        "Currency": "USD",
+        "ShortageValue": 9664.03
+      },
+      {
+        "Material": "ABC_TEST1",
+        "Plant": "3000",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 75.64,
+        "StandardPrice": 117.91,
+        "Currency": "USD",
+        "ShortageValue": 8918.71
+      },
+      {
+        "Material": "PT-1001662_1",
+        "Plant": "DC01",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 318.88,
+        "StandardPrice": 25.73,
+        "Currency": "USD",
+        "ShortageValue": 8204.78
+      },
+      {
+        "Material": "T-T300",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 34.65,
+        "StandardPrice": 216.74,
+        "Currency": "USD",
+        "ShortageValue": 7510.04
+      },
+      {
+        "Material": "PM-FG",
+        "Plant": "PL02",
+        "CompanyCode": "DS01",
+        "BaseUnit": "PC",
+        "ShortageQty": 101.23,
+        "StandardPrice": 55.45,
+        "Currency": "USD",
+        "ShortageValue": 5613.2
+      },
+      {
+        "Material": "T-F100",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 202.84,
+        "StandardPrice": 23.0,
+        "Currency": "USD",
+        "ShortageValue": 4665.32
+      },
+      {
+        "Material": "T-F400",
+        "Plant": "PL36",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 11.47,
+        "StandardPrice": 406.62,
+        "Currency": "USD",
+        "ShortageValue": 4663.93
+      },
+      {
+        "Material": "561",
+        "Plant": "5070",
+        "CompanyCode": "1710",
+        "BaseUnit": "EA",
+        "ShortageQty": 327.54,
+        "StandardPrice": 10.28,
+        "Currency": "USD",
+        "ShortageValue": 3367.11
+      },
+      {
+        "Material": "T-T100_PL37",
+        "Plant": "PL37",
+        "CompanyCode": "1710",
+        "BaseUnit": "PC",
+        "ShortageQty": 51.88,
+        "StandardPrice": 54.55,
+        "Currency": "USD",
+        "ShortageValue": 2830.05
+      }
+    ]
+  }
+}
