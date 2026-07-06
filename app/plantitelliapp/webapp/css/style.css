@@ -10,6 +10,7 @@
     overflow-x: hidden !important;
 }
 
+
 /* ============ Header Toolbar ============ */
 .dashboardHeader {
     padding: 0.75rem 1.5rem !important;
@@ -53,6 +54,7 @@
     margin-left: 0.5rem;
 }
 
+
 /* ============ Section Header ============ */
 .sectionHeaderRow {
     padding: 0 1.5rem;
@@ -77,6 +79,7 @@
     font-size: 0.78rem;
 }
 
+
 /* ============ Main Two-Column Row ============ */
 .dashboardMainRow {
     padding: 0 1.1rem 1.2rem;
@@ -100,6 +103,7 @@
     flex-direction: column;
     padding-top: 0.4rem;
 }
+
 
 /* ============ KPI Grid ============ */
 .kpiGrid {
@@ -128,55 +132,52 @@
     box-sizing: border-box;
 }
 
+
 /* ============ KPI Card Wrapper (clickable) ============ */
 .kpiCardWrapper {
+    padding: 0.5rem;
+    border-radius: 1rem;
     cursor: pointer;
-    width: 100%;
-    transition: transform 0.15s ease;
+    border: 2px solid transparent;
+    background: transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.25s ease, filter 0.25s ease;
 }
 
 .kpiCardWrapper:hover {
-    transform: translateY(-2px);
-}
-
-.kpiCardWrapper:hover .kpiTile {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ============ Selected Card Effects ============ */
-.kpiTile.kpiTileSelected {
-    border-color: #4d5bf9 !important;
-    box-shadow: 0 10px 24px rgba(15, 24, 48, 0.18), 0 2px 6px rgba(15, 24, 48, 0.1) !important;
-    animation: selectedPop 0.35s ease;
     transform: translateY(-3px);
+    border-color: rgba(37, 99, 235, 0.16);
+    background: rgba(37, 99, 235, 0.03);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
-@keyframes selectedPop {
-    0% {
-        transform: scale(0.98);
-    }
-    60% {
-        transform: scale(1.015);
-    }
-    100% {
-        transform: scale(1);
-    }
+.kpiCardWrapper[data-selected="true"] {
+    border: 2px solid #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    background: rgba(37, 99, 235, 0.04);
 }
 
-/* ============ Dim unselected cards once a selection exists ============ */
-.kpiTile {
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease, filter 0.25s ease, transform 0.2s ease;
+.kpiCardWrapper[data-selected="true"]:hover {
+    transform: translateY(-3px);
+    background: rgba(37, 99, 235, 0.06);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14), 0 10px 24px rgba(15, 23, 42, 0.10);
 }
 
-.kpiGrid.hasSelection .kpiTile:not(.kpiTileSelected) {
-    opacity: 0.6;
-    filter: saturate(0.7);
-    box-shadow: none !important;
+.kpiCardWrapper[data-selected="true"] .kpiTile {
+    border-radius: 0.9rem;
+    background: #f8faff !important;
 }
 
-.kpiGrid.hasSelection .kpiCardWrapper:not(:has(.kpiTileSelected)):hover .kpiTile {
-    opacity: 0.85;
+/* Dim unselected cards once a selection exists */
+.kpiGrid.hasSelection .kpiCardWrapper[data-selected="false"] {
+    opacity: 0.68;
+    filter: saturate(0.72);
 }
+
+.kpiGrid.hasSelection .kpiCardWrapper[data-selected="false"]:hover {
+    opacity: 0.92;
+    filter: saturate(0.9);
+}
+
 
 /* ============ KPI Tile ============ */
 .kpiTile {
@@ -189,6 +190,7 @@
     background: #ffffff !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .kpiTile .sapMPanelContent {
@@ -206,6 +208,7 @@
     flex-direction: column;
 }
 
+
 /* ============ Accent Colors ============ */
 .accentGreen {
     border-top-color: #22aa7c !important;
@@ -222,6 +225,7 @@
 .accentBlue {
     border-top-color: #4d84e8 !important;
 }
+
 
 /* ============ Top Row ============ */
 .kpiTopRow {
@@ -254,6 +258,7 @@
     border-radius: 999px !important;
     font-size: 0.62rem !important;
 }
+
 
 /* ============ Body ============ */
 .kpiBodyBlock {
@@ -317,6 +322,7 @@
     color: #cd4343;
 }
 
+
 /* ============ Footer ============ */
 .kpiFooterRow {
     margin-top: auto;
@@ -334,6 +340,7 @@
 .kpiFooterRight {
     text-align: right;
 }
+
 
 /* ============ AI Summary Panel ============ */
 .aiSummaryPanel {
@@ -372,6 +379,7 @@
     font-size: 0.82rem;
     margin-bottom: 1.1rem;
 }
+
 
 /* Insight shown after selecting a card */
 .aiInsightItem {
@@ -456,6 +464,7 @@
     line-height: 1.45;
 }
 
+
 /* Empty state before any card is selected */
 .aiEmptyState {
     display: flex;
@@ -482,6 +491,7 @@
     align-self: stretch;
     border-radius: 0.375rem;
 }
+
 
 /* ============ Responsive ============ */
 @media (max-width: 1200px) {
