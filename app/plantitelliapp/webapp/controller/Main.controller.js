@@ -217,6 +217,66 @@ sap.ui.define([
             return sHours + ":" + sMinutes + " today";
         },
  
+        // Simple deterministic pseudo-random generator so the same Material
+        // always gets the same dummy StandardPrice across refreshes/plants.
+        _seededRandom: function (sSeed) {
+            var nHash = 0;
+            for (var i = 0; i < sSeed.length; i++) {
+                nHash = (nHash << 5) - nHash + sSeed.charCodeAt(i);
+                nHash |= 0;
+            }
+            var nX = Math.sin(nHash) * 10000;
+            return nX - Math.floor(nX);
+        },
+
+        // Aggregates raw movement-level rows (from the OData export) into one
+        // row per Material-Plant, adding dummy ShortageQty / StandardPrice
+        // fields since the source table has neither.
+        _buildShortageKpiFromRawRows: function (aRawRows) {
+            var oAgg = {};
+
+            aRawRows.forEach(function (oRow) {
+                var sKey = oRow.Material + "||" + oRow.Plant;
+                if (!oAgg[sKey]) {
+                    oAgg[sKey] = {
+                        Material: oRow.Material,
+                        Plant: oRow.Plant,
+                        CompanyCode: oRow.CompanyCode,
+                        BaseUnit: oRow.BaseUnit,
+                        RecordCount: 0
+                    };
+                }
+                oAgg[sKey].RecordCount++;
+            });
+
+            var oMaterialPrices = {};
+
+            return Object.keys(oAgg).map(function (sKey) {
+                var oItem = oAgg[sKey];
+
+                if (!oMaterialPrices[oItem.Material]) {
+                    oMaterialPrices[oItem.Material] =
+                        Math.round((10 + this._seededRandom(oItem.Material) * 490) * 100) / 100;
+                }
+
+                var nShortageQty = Math.round(
+                    (5 + this._seededRandom(sKey + "|qty") * 995) * 100
+                ) / 100;
+                var nStandardPrice = oMaterialPrices[oItem.Material];
+
+                return {
+                    Material: oItem.Material,
+                    Plant: oItem.Plant,
+                    CompanyCode: oItem.CompanyCode,
+                    BaseUnit: oItem.BaseUnit,
+                    ShortageQty: nShortageQty,
+                    StandardPrice: nStandardPrice,
+                    Currency: "USD",
+                    ShortageValue: Math.round(nShortageQty * nStandardPrice * 100) / 100
+                };
+            }.bind(this));
+        },
+
         _fetchLocalStockShortageData: async function () {
             try {
                 var sUrl = sap.ui.require.toUrl("plant_intelligence_dev/model/shortageKPI.json");
@@ -228,11 +288,41 @@ sap.ui.define([
 
                 var data = await response.json();
 
-                // Support either the raw OData export shape ({ d: { results: [...] } })
-                // or the pre-aggregated KPI shape ({ ShortageKPI: { Items: [...] } })
+                // Pre-aggregated KPI shape: { ShortageKPI: { Items: [...] } }
                 if (data && data.ShortageKPI && Array.isArray(data.ShortageKPI.Items)) {
                     return data.ShortageKPI.Items;
                 }
+
+                // Raw OData export shape: { d: { results: [...] } } — aggregate
+                // by Material-Plant and add dummy ShortageQty/StandardPrice.
+                if (data && data.d && Array.isArray(data.d.results)) {
+                    return this._buildShortageKpiFromRawRows(data.d.results);
+                }
+
+                if (Array.isArray(data)) {
+                    // Could already be a flat array of shortage items, or raw rows.
+                    var bHasShortageFields = data.length > 0 &&
+                        data[0].ShortageQty !== undefined && data[0].StandardPrice !== undefined;
+                    return bHasShortageFields ? data : this._buildShortageKpiFromRawRows(data);
+                }
+
+                return [];
+            } catch (err) {
+                MessageToast.show("Error loading download.json: " + err.message);
+                return [];
+            }
+        },
+
+        _fetchLocalPlannedOrderData: async function () {
+            try {
+                var sUrl = sap.ui.require.toUrl("plant_intelligence_dev/model/plannedOrderSchedule.json");
+                var response = await fetch(sUrl);
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status + " loading plannedOrderSchedule.json");
+                }
+
+                var data = await response.json();
 
                 if (data && data.d && Array.isArray(data.d.results)) {
                     return data.d.results;
@@ -240,7 +330,7 @@ sap.ui.define([
 
                 return Array.isArray(data) ? data : [];
             } catch (err) {
-                MessageToast.show("Error loading download.json: " + err.message);
+                MessageToast.show("Error loading plannedOrderSchedule.json: " + err.message);
                 return [];
             }
         },
@@ -261,6 +351,16 @@ sap.ui.define([
                 }
 
                 return aLocalResults;
+            }
+
+            if (action === "getPlannedOrderSchedule") {
+                var aLocalPlannedOrders = await this._fetchLocalPlannedOrderData();
+
+                if (oBusyDialog) {
+                    oBusyDialog.close();
+                }
+
+                return aLocalPlannedOrders;
             }
  
             try {
@@ -414,9 +514,9 @@ sap.ui.define([
                         var nPrice = this._toNumber(oRow.StandardPrice);
                         return sum + (nQty * nPrice);
                     }.bind(this), 0);
-
+ 
                     var sFormattedValue = (nShortageValue / 1000000).toFixed(2) + "M";
-                    
+
                     sValue = String(iCount);
                     sDelta = "Shortage value $" + sFormattedValue;
                     break;
@@ -424,41 +524,40 @@ sap.ui.define([
  
                 case "scheduleRisk": {
                     var aRiskSchedule = aResults.filter(function (oRow) {
-                        var dScheduled = this._toDate(oRow.ScheduledDate);
-                        var dBasicFinish = this._toDate(oRow.BasicFinishDate);
-                        var nPlannedQty = this._toNumber(oRow.PlannedQty);
-                        var nConfirmedQty = this._toNumber(oRow.ConfirmedQty);
- 
-                        var bDateRisk = dScheduled && dBasicFinish && dScheduled.getTime() > dBasicFinish.getTime();
-                        var bMissingDateRisk = !dScheduled || !dBasicFinish;
-                        var bQtyRisk = nPlannedQty > 0 && nConfirmedQty < nPlannedQty;
- 
-                        return bDateRisk || bMissingDateRisk || bQtyRisk;
+                        var dRequired = this._toDate(oRow.RequiredFinishDate);
+                        var dScheduledFinish = this._toDate(oRow.ScheduledFinishDate);
+                        var sStatus = oRow.ReleaseStatus;
+
+                        var bLateFinish = dRequired && dScheduledFinish &&
+                            dScheduledFinish.getTime() > dRequired.getTime();
+                        var bNotReleased = sStatus !== "Released";
+
+                        return bLateFinish || bNotReleased;
                     }.bind(this));
- 
-                    var aDelayDays = aResults.map(function (oRow) {
-                        var dScheduled = this._toDate(oRow.ScheduledDate);
-                        var dBasicFinish = this._toDate(oRow.BasicFinishDate);
- 
-                        if (!dScheduled || !dBasicFinish) {
+
+                    var aDelayDays = aRiskSchedule.map(function (oRow) {
+                        var dRequired = this._toDate(oRow.RequiredFinishDate);
+                        var dScheduledFinish = this._toDate(oRow.ScheduledFinishDate);
+
+                        if (!dRequired || !dScheduledFinish) {
                             return null;
                         }
- 
-                        if (dScheduled.getTime() <= dBasicFinish.getTime()) {
+
+                        if (dScheduledFinish.getTime() <= dRequired.getTime()) {
                             return null;
                         }
- 
-                        return this._daysBetween(dBasicFinish, dScheduled);
+
+                        return this._daysBetween(dRequired, dScheduledFinish);
                     }.bind(this)).filter(function (nDays) {
                         return nDays !== null && nDays > 0;
                     });
- 
+
                     var nAvgDelay = aDelayDays.length
                         ? aDelayDays.reduce(function (sum, nDays) {
                             return sum + nDays;
                         }, 0) / aDelayDays.length
                         : null;
- 
+
                     sValue = String(aRiskSchedule.length);
                     sDelta = nAvgDelay !== null ? "Avg " + nAvgDelay.toFixed(1) + " day delay" : "Avg delay N/A";
                     break;
