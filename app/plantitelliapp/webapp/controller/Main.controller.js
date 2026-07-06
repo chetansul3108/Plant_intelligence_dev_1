@@ -217,12 +217,50 @@ sap.ui.define([
             return sHours + ":" + sMinutes + " today";
         },
  
+        _fetchLocalStockShortageData: async function () {
+            try {
+                var sUrl = sap.ui.require.toUrl("plant_intelligence_dev/model/shortageKPI.json");
+                var response = await fetch(sUrl);
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status + " loading download.json");
+                }
+
+                var data = await response.json();
+
+                // Support either the raw OData export shape ({ d: { results: [...] } })
+                // or the pre-aggregated KPI shape ({ ShortageKPI: { Items: [...] } })
+                if (data && data.ShortageKPI && Array.isArray(data.ShortageKPI.Items)) {
+                    return data.ShortageKPI.Items;
+                }
+
+                if (data && data.d && Array.isArray(data.d.results)) {
+                    return data.d.results;
+                }
+
+                return Array.isArray(data) ? data : [];
+            } catch (err) {
+                MessageToast.show("Error loading download.json: " + err.message);
+                return [];
+            }
+        },
+
         _fetchData: async function (action, bShowBusy) {
             var oBusyDialog = null;
  
             if (bShowBusy) {
                 oBusyDialog = new BusyDialog({ text: "Loading..." });
                 oBusyDialog.open();
+            }
+
+            if (action === "getStockShortage") {
+                var aLocalResults = await this._fetchLocalStockShortageData();
+
+                if (oBusyDialog) {
+                    oBusyDialog.close();
+                }
+
+                return aLocalResults;
             }
  
             try {
@@ -376,9 +414,11 @@ sap.ui.define([
                         var nPrice = this._toNumber(oRow.StandardPrice);
                         return sum + (nQty * nPrice);
                     }.bind(this), 0);
- 
+
+                    var sFormattedValue = (nShortageValue / 1000000).toFixed(2) + "M";
+                    
                     sValue = String(iCount);
-                    sDelta = "Shortage value " + nShortageValue.toFixed(2);
+                    sDelta = "Shortage value $" + sFormattedValue;
                     break;
                 }
  
