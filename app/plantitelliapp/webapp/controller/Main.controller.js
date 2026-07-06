@@ -13,6 +13,8 @@ sap.ui.define([
  
         onInit: function () {
             this.getView().setModel(new JSONModel({
+                selectedWrapperClass: "",
+selectedTileClass: "",
     hasSelectionClass: "",
     showInsight: false,
     showEmpty: true,
@@ -43,7 +45,8 @@ sap.ui.define([
                         chartClass: "chartGreen",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
-                        lineBreak: true
+                        lineBreak: true,
+                        isSelected: "false",
                     },
                     {
                         key: "orderLifecycle",
@@ -61,7 +64,8 @@ sap.ui.define([
                         chartClass: "chartAmber",
                         selectedClass: "",
                         action: "getSalesToPayment",
-                        lineBreak: false
+                        lineBreak: false,
+                        isSelected: "false",
                     },
                     {
                         key: "otif",
@@ -79,7 +83,8 @@ sap.ui.define([
                         chartClass: "chartGreen",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
-                        lineBreak: true
+                        lineBreak: true,
+                        isSelected: "false",
                     },
                     {
                         key: "stockShortage",
@@ -97,7 +102,8 @@ sap.ui.define([
                         chartClass: "chartRed",
                         selectedClass: "",
                         action: "getStockShortage",
-                        lineBreak: false
+                        lineBreak: false,
+                        isSelected: "false",
                     },
                     {
                         key: "scheduleRisk",
@@ -115,7 +121,8 @@ sap.ui.define([
                         chartClass: "chartAmber",
                         selectedClass: "",
                         action: "getPlannedOrderSchedule",
-                        lineBreak: true
+                        lineBreak: true,
+                        isSelected: "false",
                     },
                     {
                         key: "transitRisk",
@@ -133,7 +140,8 @@ sap.ui.define([
                         chartClass: "chartBlue",
                         selectedClass: "",
                         action: "getSalesOrdersInTransit",
-                        lineBreak: false
+                        lineBreak: false,
+                        isSelected: "false",
                     }
                 ]
             }), "dashboardModel");
@@ -689,44 +697,44 @@ sap.ui.define([
             this._showInsightForKey(sKey);
         },
  
-      _showInsightForKey: function (sKey) {
-    var oModel = this.getView().getModel("dashboardModel");
-    var aCards = oModel.getProperty("/cards");
-    var oCard = aCards.find(function (c) {
-        return c.key === sKey;
-    });
-    var oMeta = this._insightMeta[sKey];
+ _showInsightForKey: function (sKey) {
+            var oModel = this.getView().getModel("dashboardModel");
+            var aCards = oModel.getProperty("/cards");
+            var oCard = aCards.find(function (c) {
+                return c.key === sKey;
+            });
+            var oMeta = this._insightMeta[sKey];
 
-    if (!oCard || !oMeta) {
-        return;
-    }
+            if (!oCard || !oMeta) {
+                return;
+            }
 
-    var bIsGood = oCard.statusState === "Success";
-    var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
-    var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
+            var bIsGood = oCard.statusState === "Success";
+            var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
+            var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
 
-    var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
-        " (" + oCard.delta + "). " + oCard.footerRight + ".";
+            var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
+                " (" + oCard.delta + "). " + oCard.footerRight + ".";
 
-    oModel.setProperty("/selectedInsight/hasSelection", true);
-    oModel.setProperty("/selectedInsight/key", sKey);
-    oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
-    oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
-    oModel.setProperty("/selectedInsight/text", sText);
-    oModel.setProperty("/selectedInsight/icon", oMeta.icon);
-    oModel.setProperty("/selectedInsight/iconClass", sIconClass);
-    oModel.setProperty("/selectedInsight/recommendation", sRecommendation);
+            oModel.setProperty("/selectedInsight/hasSelection", true);
+            oModel.setProperty("/selectedInsight/key", sKey);
+            oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
+            oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
+            oModel.setProperty("/selectedInsight/text", sText);
+            oModel.setProperty("/selectedInsight/icon", oMeta.icon);
+            oModel.setProperty("/selectedInsight/iconClass", sIconClass);
+            oModel.setProperty("/selectedInsight/recommendation", sRecommendation);
 
-    oModel.setProperty("/showInsight", true);
-    oModel.setProperty("/showEmpty", false);
-    oModel.setProperty("/hasSelectionClass", "hasSelection");
+            oModel.setProperty("/showInsight", true);
+            oModel.setProperty("/showEmpty", false);
+            oModel.setProperty("/hasSelectionClass", "hasSelection");
 
-    aCards.forEach(function (c) {
-        c.selectedClass = (c.key === sKey) ? "kpiTileSelected" : "";
-    });
+            aCards.forEach(function (c) {
+    c.isSelected = (c.key === sKey) ? "true" : "false";
+});
 
-    oModel.setProperty("/cards", aCards);
-    oModel.refresh(true);
-}
+            oModel.setProperty("/cards", aCards);
+            oModel.refresh(true);
+        }
     });
 });
