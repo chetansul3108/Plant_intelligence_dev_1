@@ -1,9 +1,9 @@
 'use strict';
-
+const { getAISummary } = require('./ai-service');
 const cds = require('@sap/cds');
 const axios = require('axios');
 const https = require('https');
-
+require('dotenv').config();
 const BASE_URL = 'https://yawss4hdev.sapyash.com:44301/sap/opu/odata/sap';
 const AUTH = {
     username: 'SULC',
@@ -58,7 +58,35 @@ function handleError(actionName, err) {
 }
 
 module.exports = cds.service.impl(async function () {
+    this.on('getAISummary', async (req) => {
+        try {
+            const {
+                kpiName,
+                kpiValue,
+                unit,
+                severity,
+                target,
+                plant,
+                additionalContext
+            } = req.data;
 
+            if (!kpiName || !kpiValue || !severity) {
+                req.reject(400, 'kpiName, kpiValue and severity are required');
+            }
+
+            return await getAISummary({
+                kpiName,
+                kpiValue,
+                unit,
+                severity,
+                target,
+                plant,
+                additionalContext
+            });
+        } catch (err) {
+            handleError('getAISummary', err);
+        }
+    });
     this.on('getSalesOrdersInTransit', async () => {
     try {
         const rows = await fetchRaw(

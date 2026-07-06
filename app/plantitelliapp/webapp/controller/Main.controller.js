@@ -13,6 +13,8 @@ sap.ui.define([
  
         onInit: function () {
             this.getView().setModel(new JSONModel({
+                selectedWrapperClass: "",
+selectedTileClass: "",
     hasSelectionClass: "",
     showInsight: false,
     showEmpty: true,
@@ -43,7 +45,8 @@ sap.ui.define([
                         chartClass: "chartGreen",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
-                        lineBreak: true
+                        lineBreak: true,
+                        isSelected: "false",
                     },
                     {
                         key: "orderLifecycle",
@@ -61,7 +64,8 @@ sap.ui.define([
                         chartClass: "chartAmber",
                         selectedClass: "",
                         action: "getSalesToPayment",
-                        lineBreak: false
+                        lineBreak: false,
+                        isSelected: "false",
                     },
                     {
                         key: "otif",
@@ -79,7 +83,8 @@ sap.ui.define([
                         chartClass: "chartGreen",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
-                        lineBreak: true
+                        lineBreak: true,
+                        isSelected: "false",
                     },
                     {
                         key: "stockShortage",
@@ -97,7 +102,8 @@ sap.ui.define([
                         chartClass: "chartRed",
                         selectedClass: "",
                         action: "getStockShortage",
-                        lineBreak: false
+                        lineBreak: false,
+                        isSelected: "false",
                     },
                     {
                         key: "scheduleRisk",
@@ -115,7 +121,8 @@ sap.ui.define([
                         chartClass: "chartAmber",
                         selectedClass: "",
                         action: "getPlannedOrderSchedule",
-                        lineBreak: true
+                        lineBreak: true,
+                        isSelected: "false",
                     },
                     {
                         key: "transitRisk",
@@ -133,7 +140,8 @@ sap.ui.define([
                         chartClass: "chartBlue",
                         selectedClass: "",
                         action: "getSalesOrdersInTransit",
-                        lineBreak: false
+                        lineBreak: false,
+                        isSelected: "false",
                     }
                 ]
             }), "dashboardModel");
@@ -672,24 +680,56 @@ sap.ui.define([
             await this._loadAllCards(true);
         },
  
-        _onKpiCardClick: function (oEvent) {
-            var oDomRef = oEvent.currentTarget;
-            var oControl = Element.closestTo(oDomRef);
+        _onKpiCardClick: async function (oEvent) {
+    var oDomRef = oEvent.currentTarget;
+    var oControl = Element.closestTo(oDomRef);
+
+    if (!oControl) {
+        return;
+    }
+
+    var aCustomData = oControl.getCustomData();
+    if (!aCustomData || !aCustomData.length) {
+        return;
+    }
+
+    var sKey = aCustomData[0].getValue();
+    await this._showInsightForKey(sKey);
+},
+        _fetchAISummary: async function (oCard) {
+    try {
+        const response = await fetch("/transit-service/getAISummary", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                kpiName: oCard.title || "",
+                kpiValue: String(oCard.value || ""),
+                unit: oCard.unit || "",
+                severity: oCard.statusText || "",
+                target: oCard.footerRight || "",
+                plant: "All Plants",
+                additionalContext: oCard.delta || ""
+            })
+        });
+
+        const contentType = response.headers.get("content-type") || "";
+        if (!response.ok || !contentType.includes("application/json")) {
+            const text = await response.text();
+            throw new Error("HTTP " + response.status + ": " + text);
+        }
+
+        const data = await response.json();
+        return data.value || data;
+    } catch (err) {
+        console.error("AI summary fetch failed:", err);
+        throw err;
+    }
+},
  
-            if (!oControl) {
-                return;
-            }
- 
-            var aCustomData = oControl.getCustomData();
-            if (!aCustomData || !aCustomData.length) {
-                return;
-            }
- 
-            var sKey = aCustomData[0].getValue();
-            this._showInsightForKey(sKey);
-        },
- 
-      _showInsightForKey: function (sKey) {
+_showInsightForKey: async function (sKey) {
     var oModel = this.getView().getModel("dashboardModel");
     var aCards = oModel.getProperty("/cards");
     var oCard = aCards.find(function (c) {
@@ -701,31 +741,56 @@ sap.ui.define([
         return;
     }
 
-    var bIsGood = oCard.statusState === "Success";
-    var sIconClass = bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad;
-    var sRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
-
-    var sText = oCard.title + " is currently " + oCard.value + oCard.unit +
-        " (" + oCard.delta + "). " + oCard.footerRight + ".";
+    aCards.forEach(function (c) {
+        c.isSelected = (c.key === sKey) ? "true" : "false";
+    });
+    oModel.setProperty("/cards", aCards);
 
     oModel.setProperty("/selectedInsight/hasSelection", true);
     oModel.setProperty("/selectedInsight/key", sKey);
-    oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
-    oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
-    oModel.setProperty("/selectedInsight/text", sText);
+    oModel.setProperty("/selectedInsight/subtitle", "Generating AI insight...");
+    oModel.setProperty("/selectedInsight/title", oCard.title);
+    oModel.setProperty("/selectedInsight/text", "Please wait while AI summary is being generated.");
     oModel.setProperty("/selectedInsight/icon", oMeta.icon);
-    oModel.setProperty("/selectedInsight/iconClass", sIconClass);
-    oModel.setProperty("/selectedInsight/recommendation", sRecommendation);
-
+    oModel.setProperty("/selectedInsight/iconClass", oMeta.iconClassBad);
+    oModel.setProperty("/selectedInsight/recommendation", "");
     oModel.setProperty("/showInsight", true);
     oModel.setProperty("/showEmpty", false);
     oModel.setProperty("/hasSelectionClass", "hasSelection");
+    oModel.refresh(true);
 
-    aCards.forEach(function (c) {
-        c.selectedClass = (c.key === sKey) ? "kpiTileSelected" : "";
-    });
+    try {
+        var oAiSummary = await this._fetchAISummary(oCard);
 
-    oModel.setProperty("/cards", aCards);
+        oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
+        oModel.setProperty("/selectedInsight/title", oAiSummary.title || (oCard.title + " — " + oCard.statusText));
+        oModel.setProperty("/selectedInsight/text", oAiSummary.summaryText || "No summary generated.");
+        oModel.setProperty("/selectedInsight/recommendation", oAiSummary.recommendedAction || "");
+        oModel.setProperty("/selectedInsight/icon", oMeta.icon);
+
+        if ((oAiSummary.severity || "").toUpperCase() === "CRITICAL") {
+            oModel.setProperty("/selectedInsight/iconClass", "iconRed");
+        } else if ((oAiSummary.severity || "").toUpperCase() === "WATCH" || (oAiSummary.severity || "").toUpperCase() === "MONITOR") {
+            oModel.setProperty("/selectedInsight/iconClass", "iconAmber");
+        } else {
+            oModel.setProperty("/selectedInsight/iconClass", "iconGreen");
+        }
+    } catch (err) {
+        var bIsGood = oCard.statusState === "Success";
+        var sFallbackRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
+        var sFallbackText = oCard.title + " is currently " + oCard.value + oCard.unit +
+            " (" + oCard.delta + "). " + oCard.footerRight + ".";
+
+        oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
+        oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
+        oModel.setProperty("/selectedInsight/text", sFallbackText);
+        oModel.setProperty("/selectedInsight/recommendation", sFallbackRecommendation);
+        oModel.setProperty("/selectedInsight.icon", oMeta.icon);
+        oModel.setProperty("/selectedInsight/iconClass", bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad);
+
+console.warn("AI summary unavailable. Using fallback insight.", err);
+    }
+
     oModel.refresh(true);
 }
     });

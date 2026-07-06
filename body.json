@@ -1,0 +1,9 @@
+{
+  "kpiName": "STOCK SHORTAGE COUNT",
+  "kpiValue": "122",
+  "unit": "count",
+  "severity": "CRITICAL",
+  "target": "<= 20",
+  "plant": "All Plants",
+  "additionalContext": "Shortage value is $16.13M and 8 orders are impacted."
+}
