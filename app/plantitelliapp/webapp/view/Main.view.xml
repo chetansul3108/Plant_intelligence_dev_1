@@ -5,7 +5,7 @@
     xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core"
     displayBlock="true">
-
+ 
     <App>
         <Page title="" class="kpiPage">
             <customHeader>
@@ -14,16 +14,16 @@
                         src="images/yash-logo.png"
                         height="1.9rem"
                         class="headerLogoImg" />
-
+ 
                     <Title
                         text="Plant Intelligence"
                         level="H3"
                         class="titleMain" />
-
+ 
                     <ToolbarSpacer />
                 </Toolbar>
             </customHeader>
-
+ 
             <content>
                 <HBox
                     justifyContent="SpaceBetween"
@@ -42,24 +42,23 @@
                         text="Updated 2 min ago"
                         class="sectionUpdated" />
                 </HBox>
-
+ 
                 <HBox
                     justifyContent="SpaceBetween"
                     class="dashboardMainRow"
                     width="100%">
-
+ 
                     <VBox
                         class="kpiColumn"
-                        width="70%"
                         fitContainer="true">
-
+ 
                         <l:Grid
                             defaultSpan="XL6 L6 M6 S12"
                             vSpacing="0"
                             hSpacing="0"
                             class="kpiGrid {dashboardModel>/hasSelectionClass}"
                             content="{dashboardModel>/cards}">
-
+ 
                             <VBox class="kpiCardWrapper">
                                 <customData>
                                     <core:CustomData
@@ -70,13 +69,13 @@
                                         value="{dashboardModel>isSelected}"
                                         writeToDom="true" />
                                 </customData>
-
+ 
                                 <layoutData>
                                     <l:GridData
                                         span="XL6 L6 M6 S12"
                                         linebreak="{dashboardModel>lineBreak}" />
                                 </layoutData>
-
+ 
                                 <Panel class="kpiTile {dashboardModel>accentClass}">
                                     <content>
                                         <VBox class="kpiTileInner">
@@ -85,19 +84,19 @@
                                                 alignItems="Start"
                                                 class="kpiTopRow">
                                                 <VBox class="kpiIconBox {dashboardModel>iconClass}" />
-
+ 
                                                 <ObjectStatus
                                                     text="{dashboardModel>statusText}"
                                                     state="{dashboardModel>statusState}"
                                                     inverted="true"
                                                     class="kpiStatusBadge" />
                                             </HBox>
-
+ 
                                             <VBox class="kpiBodyBlock">
                                                 <Text
                                                     text="{dashboardModel>title}"
                                                     class="kpiTitle" />
-
+ 
                                                 <HBox
                                                     alignItems="End"
                                                     class="kpiValueRow">
@@ -108,12 +107,12 @@
                                                         text="{dashboardModel>unit}"
                                                         class="kpiUnit" />
                                                 </HBox>
-
+ 
                                                 <Text
                                                     text="{dashboardModel>delta}"
                                                     class="kpiDeltaText {dashboardModel>deltaClass}" />
                                             </VBox>
-
+ 
                                             <HBox
                                                 justifyContent="SpaceBetween"
                                                 class="kpiFooterRow">
@@ -130,12 +129,11 @@
                             </VBox>
                         </l:Grid>
                     </VBox>
-
+ 
                     <VBox
                         class="aiSummaryColumn"
-                        width="30%"
                         fitContainer="true">
-
+ 
                         <Panel class="aiSummaryPanel">
                             <content>
                                 <VBox class="aiSummaryInner">
@@ -151,11 +149,11 @@
                                             level="H5"
                                             class="aiSummaryTitle" />
                                     </HBox>
-
+ 
                                     <Text
                                         text="{dashboardModel>/selectedInsight/subtitle}"
                                         class="aiSummarySubtitle" />
-
+ 
                                     <VBox
                                         class="aiInsightItem"
                                         visible="{dashboardModel>/showInsight}">
@@ -169,11 +167,11 @@
                                                 text="{dashboardModel>/selectedInsight/title}"
                                                 class="aiInsightTitle" />
                                         </HBox>
-
+ 
                                         <Text
                                             text="{dashboardModel>/selectedInsight/text}"
                                             class="aiInsightText" />
-
+ 
                                         <VBox class="aiRecommendBlock">
                                             <Text
                                                 text="RECOMMENDED ACTION"
@@ -183,7 +181,7 @@
                                                 class="aiRecommendText" />
                                         </VBox>
                                     </VBox>
-
+ 
                                     <VBox
                                         class="aiEmptyState"
                                         visible="{dashboardModel>/showEmpty}">

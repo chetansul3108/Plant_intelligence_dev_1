@@ -94,4 +94,21 @@ service TransitService {
         Customer      : String;
         CustomerName  : String;
     }
+        action getAISummary(
+        kpiName           : String,
+        kpiValue          : String,
+        unit              : String,
+        severity          : String,
+        target            : String,
+        plant             : String,
+        additionalContext : String
+    ) returns AISummaryItem;
+
+    type AISummaryItem {
+        title              : String;
+        severity           : String;
+        summaryText        : String;
+        recommendedAction  : String;
+        generatedAt        : String;
+    }
 }
