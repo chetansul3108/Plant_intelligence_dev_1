@@ -7,7 +7,7 @@
     displayBlock="true">
 
     <App>
-        <Page title="" class="kpiPage" enableScrolling="false">
+        <Page title="" class="kpiPage">
             <customHeader>
                 <Toolbar class="dashboardHeader" height="3.5rem">
                     <Image
