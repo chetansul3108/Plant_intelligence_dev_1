@@ -147,12 +147,15 @@ async function getAISummary(payload) {
     const parsed = parseJsonSafely(content, payload);
 
     return {
-        title: parsed.title || `${payload.kpiName || 'KPI'} - ${payload.severity || 'MONITOR'}`,
-        severity: parsed.severity || payload.severity || 'MONITOR',
-        summaryText: parsed.summaryText || 'No summary generated.',
-        recommendedAction: parsed.recommendedAction || 'Review KPI drivers and validate source data.',
-        generatedAt: new Date().toISOString()
-    };
+    title: parsed.title || `${payload.kpiName || 'KPI'} - ${payload.severity || 'MONITOR'}`,
+    severity: parsed.severity || payload.severity || 'MONITOR',
+    summaryText: parsed.summaryText || 'No summary generated.',
+    recommendedAction: parsed.recommendedAction || 'Review KPI drivers and validate source data.',
+    generatedAt: new Date().toISOString(),
+    source: 'AI',
+    provider: 'Groq',
+    model: GROQ_MODEL
+};
 }
 
 module.exports = {

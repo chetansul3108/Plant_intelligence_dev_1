@@ -787,6 +787,7 @@ _showInsightForKey: async function (sKey) {
         oModel.setProperty("/selectedInsight/recommendation", sFallbackRecommendation);
         oModel.setProperty("/selectedInsight.icon", oMeta.icon);
         oModel.setProperty("/selectedInsight/iconClass", bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad);
+        
  
 console.warn("AI summary unavailable. Using fallback insight.", err);
     }
