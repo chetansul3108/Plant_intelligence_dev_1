@@ -1,12 +1,10 @@
-
 'use strict';
 
 require('dotenv').config();
-
 const axios = require('axios');
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -14,28 +12,36 @@ function sleep(ms) {
 
 function buildPrompt(payload) {
     return `
-Return only valid JSON in this exact format:
+You are an expert SAP Manufacturing and Supply Chain Analytics consultant. Your task is to analyze the KPI together with all supporting data provided. Do not simply summarize the KPI. Think like a senior operations analyst. Analyze the data deeply and determine what the KPI is measuring, performance health, business reasons, bottlenecks, risks, impact, and actionable recommendations.
+
+Return ONLY valid JSON in this exact format:
 {
   "title": "string",
-  "severity": "string",
-  "summaryText": "string",
-  "recommendedAction": "string"
+  "severity": "CRITICAL | HIGH | MEDIUM | LOW | INFO",
+  "status": "Healthy | Warning | Critical",
+  "summaryText": "Core insights structured exactly as 4 to 5 distinct bullet points.",
+  "rootCause": "Most likely reason based on the supplied data.",
+  "businessImpact": "Operational or financial impact.",
+  "recommendedAction": "Specific actions to improve the KPI.",
+  "warning": "Potential future risk if ignored. Empty string if none.",
+  "opportunity": "Suggested optimization opportunity. Empty string if none."
 }
 
-Rules:
-- Keep summaryText under 45 words.
-- Keep recommendedAction under 25 words.
-- Use concise business language.
-- Do not add markdown.
-- Do not wrap JSON in code fences.
+Analysis Rules:
+- CRITICAL FORMAT RULE: The "summaryText" value MUST be formatted strictly as 4 to 5 distinct bullet points using standard dashes (e.g., "- Point 1\\n- Point 2\\n- Point 3..."). Do not write continuous paragraphs.
+- Base every conclusion ONLY on the supplied data. Do not invent facts.
+- Keep the language concise, professional, and suitable for an SAP executive dashboard.
+- Do not add markdown backticks (\`\`\`) around the JSON response.
 
+KPI Information:
 KPI Name: ${payload.kpiName || ''}
-KPI Value: ${payload.kpiValue || ''}
+Current Value: ${payload.kpiValue || ''}
+Target: ${payload.target || ''}
 Unit: ${payload.unit || ''}
 Severity: ${payload.severity || ''}
-Target: ${payload.target || ''}
 Plant: ${payload.plant || ''}
 Additional Context: ${payload.additionalContext || ''}
+Supporting KPI Dataset: ${JSON.stringify(payload.data || [], null, 2)}
 `;
 }
 
@@ -58,15 +64,22 @@ function parseJsonSafely(content, payload) {
             try {
                 return JSON.parse(match[0]);
             } catch (innerErr) {
+                // Fall through to fallback object
             }
         }
     }
 
+    // Fallback object matching the new schema
     return {
         title: `${payload.kpiName || 'KPI'} - ${payload.severity || 'MONITOR'}`,
-        severity: payload.severity || 'MONITOR',
-        summaryText: cleaned.slice(0, 300),
-        recommendedAction: 'Review KPI drivers and validate source data.'
+        severity: payload.severity || 'INFO',
+        status: 'Warning',
+        summaryText: "- Data processing error encountered.\\n- Unable to structure the real-time operational summary.\\n- Please check source systems manually.",
+        rootCause: 'Data analysis could not be fully structuralized.',
+        businessImpact: 'Unclear operational impact due to parsing error.',
+        recommendedAction: 'Review KPI drivers and validate source data manually.',
+        warning: 'Potential data processing discrepancy.',
+        opportunity: ''
     };
 }
 
@@ -111,12 +124,12 @@ async function getAISummary(payload) {
 
     const requestBody = {
         model: GROQ_MODEL,
-        temperature: 0.2,
-        max_tokens: 220,
+        temperature: 0.2, 
+        max_tokens: 800, 
         messages: [
             {
                 role: 'system',
-                content: 'You generate short KPI insights for SAP dashboards. Return only valid JSON.'
+                content: 'You generate executive SAP dashboard elements. You strictly format summaryText as 4 to 5 bullet points using newlines and dashes. You output valid JSON.'
             },
             {
                 role: 'user',
@@ -147,15 +160,20 @@ async function getAISummary(payload) {
     const parsed = parseJsonSafely(content, payload);
 
     return {
-    title: parsed.title || `${payload.kpiName || 'KPI'} - ${payload.severity || 'MONITOR'}`,
-    severity: parsed.severity || payload.severity || 'MONITOR',
-    summaryText: parsed.summaryText || 'No summary generated.',
-    recommendedAction: parsed.recommendedAction || 'Review KPI drivers and validate source data.',
-    generatedAt: new Date().toISOString(),
-    source: 'AI',
-    provider: 'Groq',
-    model: GROQ_MODEL
-};
+        title: parsed.title,
+        severity: parsed.severity,
+        status: parsed.status,
+        summaryText: parsed.summaryText,
+        rootCause: parsed.rootCause,
+        businessImpact: parsed.businessImpact,
+        recommendedAction: parsed.recommendedAction,
+        warning: parsed.warning,
+        opportunity: parsed.opportunity,
+        generatedAt: new Date().toISOString(),
+        source: 'AI',
+        provider: 'Groq',
+        model: GROQ_MODEL
+    };
 }
 
 module.exports = {
