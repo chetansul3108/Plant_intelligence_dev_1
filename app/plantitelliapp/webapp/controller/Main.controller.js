@@ -697,6 +697,7 @@ selectedTileClass: "",
     await this._showInsightForKey(sKey);
 },
         _fetchAISummary: async function (oCard) {
+            console.log("Fetching AI summary for card:", oCard);
     try {
         const response = await fetch("/transit-service/getAISummary", {
             method: "POST",
@@ -722,6 +723,8 @@ selectedTileClass: "",
         }
  
         const data = await response.json();
+        console.log("AI summary response data:", data);
+
         return data.value || data;
     } catch (err) {
         console.error("AI summary fetch failed:", err);

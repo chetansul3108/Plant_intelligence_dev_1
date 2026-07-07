@@ -357,7 +357,7 @@
 }
  
 .aiSummaryTitle {
-    font-size: 1.1rem !important;
+    font-size: 1.5rem !important;
     color: #1a2233;
 }
  
@@ -411,7 +411,7 @@
 }
  
 .aiInsightText {
-    font-size: 0.83rem;
+    font-size: 1.01rem;
     color: #6b7686;
     line-height: 1.5;
     margin-top: 0.25rem;
@@ -419,6 +419,7 @@
  
 .aiRecommendBlock {
     margin-top: 0.9rem;
+    font-size: 0.9rem;
     padding: 0.7rem 0.85rem;
     background: #f4f6fb;
     border-radius: 8px;
@@ -433,7 +434,7 @@
 }
  
 .aiRecommendText {
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     color: #2f3947;
     line-height: 1.45;
 }

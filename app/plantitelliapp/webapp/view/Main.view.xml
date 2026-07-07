@@ -142,11 +142,11 @@
                                         class="aiSummaryHeader">
                                         <core:Icon
                                             src="sap-icon://ai"
-                                            size="1.1rem"
+                                            size="1.5rem"
                                             class="aiSummaryIcon" />
                                         <Title
                                             text="AI Summary"
-                                            level="H5"
+                                            level="H6"
                                             class="aiSummaryTitle" />
                                     </HBox>
  
