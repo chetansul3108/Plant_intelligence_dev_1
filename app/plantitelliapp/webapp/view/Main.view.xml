@@ -123,6 +123,23 @@
                                                     text="{dashboardModel>footerRight}"
                                                     class="kpiFooterRight" />
                                             </HBox>
+
+                                            <HBox
+                                                justifyContent="End"
+                                                class="kpiForecastRow sapUiTinyMarginTop">
+                                                <Button
+                                                    text="Forecast"
+                                                    icon="sap-icon://line-chart"
+                                                    type="Transparent"
+                                                    class="forecastTrigger"
+                                                    press=".onForecastPress">
+                                                    <customData>
+                                                        <core:CustomData
+                                                            key="cardKey"
+                                                            value="{dashboardModel>key}" />
+                                                    </customData>
+                                                </Button>
+                                            </HBox>
                                         </VBox>
                                     </content>
                                 </Panel>
@@ -152,7 +169,7 @@
  
                                     <Text
                                         text="{dashboardModel>/selectedInsight/subtitle}"
-                                        class="aiSummarySubtitle" />
+                                        class="aiSummarySubtitle"/>
  
                                     <VBox
                                         class="aiInsightItem"

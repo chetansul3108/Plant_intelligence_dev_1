@@ -3,9 +3,11 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/BusyDialog",
     "sap/m/MessageToast",
+    "sap/m/MessageBox",
     "sap/ui/core/Element",
+    "sap/ui/core/Fragment",
     "plant_intelligence_dev/formatter/kpiformatter"
-], function (Controller, JSONModel, BusyDialog, MessageToast, Element, kpiformatter) {
+], function (Controller, JSONModel, BusyDialog, MessageToast, MessageBox, Element, Fragment, kpiformatter) {
     "use strict";
  
     return Controller.extend("plant_intelligence_dev.controller.Main", {
@@ -45,6 +47,7 @@ selectedTileClass: "",
                         chartClass: "chartGreen",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
+                        forecastType: "delivery",
                         lineBreak: true,
                         isSelected: "false",
                     },
@@ -64,6 +67,7 @@ selectedTileClass: "",
                         chartClass: "chartAmber",
                         selectedClass: "",
                         action: "getSalesToPayment",
+                        forecastType: "delivery",
                         lineBreak: false,
                         isSelected: "false",
                     },
@@ -83,6 +87,7 @@ selectedTileClass: "",
                         chartClass: "chartGreen",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
+                        forecastType: "delivery",
                         lineBreak: true,
                         isSelected: "false",
                     },
@@ -102,6 +107,7 @@ selectedTileClass: "",
                         chartClass: "chartRed",
                         selectedClass: "",
                         action: "getStockShortage",
+                        forecastType: "stock",
                         lineBreak: false,
                         isSelected: "false",
                     },
@@ -121,6 +127,7 @@ selectedTileClass: "",
                         chartClass: "chartAmber",
                         selectedClass: "",
                         action: "getPlannedOrderSchedule",
+                        forecastType: "delivery",
                         lineBreak: true,
                         isSelected: "false",
                     },
@@ -140,6 +147,7 @@ selectedTileClass: "",
                         chartClass: "chartBlue",
                         selectedClass: "",
                         action: "getSalesOrdersInTransit",
+                        forecastType: "delivery",
                         lineBreak: false,
                         isSelected: "false",
                     }
@@ -681,6 +689,12 @@ selectedTileClass: "",
         },
  
         _onKpiCardClick: async function (oEvent) {
+    // Ignore clicks that originated on the Forecast button — it has its
+    // own press handler and shouldn't also trigger card selection/insight.
+    if (jQuery(oEvent.target).closest(".forecastTrigger").length) {
+        return;
+    }
+
     var oDomRef = oEvent.currentTarget;
     var oControl = Element.closestTo(oDomRef);
  
@@ -796,6 +810,136 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
     }
  
     oModel.refresh(true);
-}
+},
+
+        // ===================== FORECAST (MLService) =====================
+
+        onForecastPress: async function (oEvent) {
+            var sKey = oEvent.getSource().data("cardKey");
+            var oModel = this.getView().getModel("dashboardModel");
+            var aCards = oModel.getProperty("/cards");
+            var oCard = aCards.find(function (c) {
+                return c.key === sKey;
+            });
+
+            if (!oCard) {
+                return;
+            }
+
+            var oBusyDialog = new BusyDialog({ text: "Generating forecast..." });
+            oBusyDialog.open();
+
+            try {
+                var oResult;
+
+                if (oCard.forecastType === "stock") {
+                    oResult = await this._fetchForecast("predictStock", this._buildStockPayload(oCard));
+                } else {
+                    oResult = await this._fetchForecast("predictDelivery", this._buildDeliveryPayload(oCard));
+                }
+
+                this._showForecastDialog(oResult, oCard.forecastType);
+            } catch (err) {
+                MessageBox.error("Forecast failed: " + err.message);
+            } finally {
+                oBusyDialog.close();
+            }
+        },
+
+        _fetchForecast: async function (sAction, oPayload) {
+            var response = await fetch("/odata/v4/ml/" + sAction, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(oPayload)
+            });
+
+            var contentType = response.headers.get("content-type") || "";
+            if (!response.ok || !contentType.includes("application/json")) {
+                var text = await response.text();
+                throw new Error("HTTP " + response.status + ": " + text);
+            }
+
+            var data = await response.json();
+            return data.value || data;
+        },
+
+        // NOTE: placeholder payload — replace with real bound feature values
+        // (month_sin/cos, lag_1..lag_6, rolling_mean_3, rolling_std_3, trend)
+        // once those are available on the card/data model.
+        _buildStockPayload: function (oCard) {
+            var oNow = new Date();
+            var nMonth = oNow.getMonth() + 1;
+            var nBase = this._toNumber(oCard.value) || 50;
+
+            return {
+                month_sin: Math.sin((2 * Math.PI * nMonth) / 12),
+                month_cos: Math.cos((2 * Math.PI * nMonth) / 12),
+                lag_1: nBase,
+                lag_2: nBase * 0.95,
+                lag_3: nBase * 0.9,
+                lag_6: nBase * 0.85,
+                rolling_mean_3: nBase * 0.93,
+                rolling_std_3: Math.max(1, nBase * 0.1),
+                trend: 1
+            };
+        },
+
+        // NOTE: placeholder payload — replace with real bound feature values
+        // (ShippingPoint, Plant, Material, etc.) once those are available on
+        // the card/data model.
+        _buildDeliveryPayload: function (oCard) {
+            var oNow = new Date();
+
+            return {
+                ShippingPoint: "1000",
+                SalesOrganization: "1000",
+                Plant: "1000",
+                StorageLocation: "0001",
+                SoldToParty: "1000",
+                ShipToParty: "1000",
+                Material: "MAT001",
+                Product: "MAT001",
+                BaseUnit: "EA",
+                MaterialGroup: "GRP01",
+                ItemRoute: "R001",
+                DeliveryPriority: "02",
+                ActualDeliveryQuantity: this._toNumber(oCard.value) || 100,
+                DeliveryQuantityUnit: "EA",
+                Creation_DayOfWeek: oNow.getDay(),
+                Creation_Month: oNow.getMonth() + 1,
+                Planned_Transit_Days: 3
+            };
+        },
+
+        _showForecastDialog: function (oResult, sType) {
+            var oView = this.getView();
+
+            if (!this._pForecastDialog) {
+                this._pForecastDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "plant_intelligence_dev.fragment.ForecastDialog",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+
+            this._pForecastDialog.then(function (oDialog) {
+                var oForecastModel = new JSONModel(Object.assign({ type: sType }, oResult));
+                oDialog.setModel(oForecastModel, "forecast");
+                oDialog.open();
+            });
+        },
+
+        onForecastDialogClose: function () {
+            if (this._pForecastDialog) {
+                this._pForecastDialog.then(function (oDialog) {
+                    oDialog.close();
+                });
+            }
+        }
     });
 });
