@@ -938,10 +938,11 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
                 console.log("Opening forecast dialog with result:", oResult);
                 var oData = Object.assign({ type: sType }, oResult || {}); 
                 var oForecastModel = new JSONModel(oData);
+                
                 oDialog.setModel(oForecastModel, "forecast");
                 console.log("Forecast model set:", oForecastModel.getData());
                 oDialog.open();
-            });
+            }.bind(this)); // <-- Added .bind(this) to guarantee context safety
         },
 
         onForecastDialogClose: function () {
