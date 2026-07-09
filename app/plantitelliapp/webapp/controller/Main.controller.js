@@ -48,6 +48,7 @@ selectedTileClass: "",
                         selectedClass: "",
                         action: "getOnTimeDelivery",
                         forecastType: "delivery",
+                        hasForecast: true,
                         lineBreak: true,
                         isSelected: "false",
                     },
@@ -69,6 +70,7 @@ selectedTileClass: "",
                         action: "getSalesToPayment",
                         forecastType: "delivery",
                         lineBreak: false,
+                        hasForecast: false,
                         isSelected: "false",
                     },
                     {
@@ -89,6 +91,7 @@ selectedTileClass: "",
                         action: "getOnTimeDelivery",
                         forecastType: "delivery",
                         lineBreak: true,
+                        hasForecast: false,
                         isSelected: "false",
                     },
                     {
@@ -108,6 +111,7 @@ selectedTileClass: "",
                         selectedClass: "",
                         action: "getStockShortage",
                         forecastType: "stock",
+                        hasForecast: true,
                         lineBreak: false,
                         isSelected: "false",
                     },
@@ -129,6 +133,7 @@ selectedTileClass: "",
                         action: "getPlannedOrderSchedule",
                         forecastType: "delivery",
                         lineBreak: true,
+                        hasForecast: false,
                         isSelected: "false",
                     },
                     {
@@ -149,6 +154,7 @@ selectedTileClass: "",
                         action: "getSalesOrdersInTransit",
                         forecastType: "delivery",
                         lineBreak: false,
+                        hasForecast: false,
                         isSelected: "false",
                     }
                 ]
@@ -862,6 +868,7 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
             }
 
             var data = await response.json();
+            console.log("Forecast response data:", data);
             return data.value || data;
         },
 
@@ -928,8 +935,11 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
             }
 
             this._pForecastDialog.then(function (oDialog) {
-                var oForecastModel = new JSONModel(Object.assign({ type: sType }, oResult));
+                console.log("Opening forecast dialog with result:", oResult);
+                var oData = Object.assign({ type: sType }, oResult || {}); 
+                var oForecastModel = new JSONModel(oData);
                 oDialog.setModel(oForecastModel, "forecast");
+                console.log("Forecast model set:", oForecastModel.getData());
                 oDialog.open();
             });
         },
