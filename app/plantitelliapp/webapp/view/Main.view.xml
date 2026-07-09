@@ -16,7 +16,7 @@
                         class="headerLogoImg" />
  
                     <Title
-                        text="Plant Intelligence"
+                        text="AI-Powered Plant and Supply Chain Intelligence"
                         level="H3"
                         class="titleMain" />
  
@@ -132,6 +132,7 @@
                                                     icon="sap-icon://line-chart"
                                                     type="Transparent"
                                                     class="forecastTrigger"
+                                                    visible="{dashboardModel>hasForecast}"
                                                     press=".onForecastPress">
                                                     <customData>
                                                         <core:CustomData
