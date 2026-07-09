@@ -881,15 +881,19 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
             var nBase = this._toNumber(oCard.value) || 50;
 
             return {
-                month_sin: Math.sin((2 * Math.PI * nMonth) / 12),
-                month_cos: Math.cos((2 * Math.PI * nMonth) / 12),
-                lag_1: nBase,
-                lag_2: nBase * 0.95,
-                lag_3: nBase * 0.9,
-                lag_6: nBase * 0.85,
-                rolling_mean_3: nBase * 0.93,
-                rolling_std_3: Math.max(1, nBase * 0.1),
-                trend: 1
+               month_sin: 0.50,
+    month_sin: 0.50,
+  month_cos: 0.87,
+
+  lag_1: 4.2,
+  lag_2: 4.1,
+  lag_3: 4.0,
+  lag_6: 3.9,
+
+  rolling_mean_3: 4.1,
+  rolling_std_3: 0.12,
+
+  trend: 1.2
             };
         },
 
@@ -921,36 +925,43 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
         },
 
         _showForecastDialog: function (oResult, sType) {
-            var oView = this.getView();
+    var oView = this.getView();
 
-            if (!this._pForecastDialog) {
-                this._pForecastDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "plant_intelligence_dev.fragment.ForecastDialog",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                });
-            }
+    var sFragmentName = "plant_intelligence_dev.fragment.StockForecastDialog";
 
-            this._pForecastDialog.then(function (oDialog) {
-                console.log("Opening forecast dialog with result:", oResult);
-                var oData = Object.assign({ type: sType }, oResult || {}); 
-                var oForecastModel = new JSONModel(oData);
-                
-                oDialog.setModel(oForecastModel, "forecast");
-                console.log("Forecast model set:", oForecastModel.getData());
-                oDialog.open();
-            }.bind(this)); // <-- Added .bind(this) to guarantee context safety
-        },
+    Fragment.load({
+        id: oView.getId(),
+        name: sFragmentName,
+        controller: this
+    }).then(function (oDialog) {
 
-        onForecastDialogClose: function () {
-            if (this._pForecastDialog) {
-                this._pForecastDialog.then(function (oDialog) {
-                    oDialog.close();
-                });
-            }
-        }
+        var iShortage = Number(oResult?.prediction ?? 0);
+
+        // ✅ HANDLE LOGIC HERE (NOT IN XML)
+        var oData = {
+            prediction: iShortage.toFixed(2),
+            statusText: iShortage > 0 ? "Shortage Expected" : "No Shortage",
+            statusState: iShortage > 0 ? "Error" : "Success",
+            messageText: iShortage > 0
+                ? "Potential stock shortage detected. Replenishment required."
+                : "No shortage expected. Stock levels are sufficient.",
+            messageType: iShortage > 0 ? "Error" : "Success"
+        };
+
+        console.log("✅ STOCK DATA:", oData);
+
+        var oModel = new sap.ui.model.json.JSONModel(oData);
+        oDialog.setModel(oModel, "forecast");
+
+        oView.addDependent(oDialog);
+        oDialog.open();
+    });
+},
+
+        onForecastDialogClose: function (oEvent) {
+    var oDialog = oEvent.getSource().getParent();
+    oDialog.close();
+    oDialog.destroy(); // IMPORTANT (prevents duplicate dialogs)
+}
     });
 });
