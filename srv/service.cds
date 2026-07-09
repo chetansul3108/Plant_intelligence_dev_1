@@ -101,7 +101,8 @@ service TransitService {
         severity          : String,
         target            : String,
         plant             : String,
-        additionalContext : String
+        additionalContext : String,
+        forecastData: String
     ) returns AISummaryItem;
 
     type AISummaryItem {

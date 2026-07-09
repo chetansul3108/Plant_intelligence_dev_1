@@ -716,8 +716,8 @@ selectedTileClass: "",
     var sKey = aCustomData[0].getValue();
     await this._showInsightForKey(sKey);
 },
-        _fetchAISummary: async function (oCard) {
-            console.log("Fetching AI summary for card:", oCard);
+       _fetchAISummary: async function (oCard, oForecastData) {
+    console.log("Fetching AI summary for card:", oCard, "forecast:", oForecastData);
     try {
         const response = await fetch("/transit-service/getAISummary", {
             method: "POST",
@@ -732,19 +732,19 @@ selectedTileClass: "",
                 severity: oCard.statusText || "",
                 target: oCard.footerRight || "",
                 plant: "All Plants",
-                additionalContext: oCard.delta || ""
+                additionalContext: oCard.delta || "",
+                // stringified because CDS action params are simple types (String)
+                forecastData: oForecastData ? JSON.stringify(oForecastData) : ""
             })
         });
- 
+
         const contentType = response.headers.get("content-type") || "";
         if (!response.ok || !contentType.includes("application/json")) {
             const text = await response.text();
             throw new Error("HTTP " + response.status + ": " + text);
         }
- 
-        const data = await response.json();
-        console.log("AI summary response data:", data);
 
+        const data = await response.json();
         return data.value || data;
     } catch (err) {
         console.error("AI summary fetch failed:", err);
@@ -759,16 +759,16 @@ _showInsightForKey: async function (sKey) {
         return c.key === sKey;
     });
     var oMeta = this._insightMeta[sKey];
- 
+
     if (!oCard || !oMeta) {
         return;
     }
- 
+
     aCards.forEach(function (c) {
         c.isSelected = (c.key === sKey) ? "true" : "false";
     });
     oModel.setProperty("/cards", aCards);
- 
+
     oModel.setProperty("/selectedInsight/hasSelection", true);
     oModel.setProperty("/selectedInsight/key", sKey);
     oModel.setProperty("/selectedInsight/subtitle", "Generating AI insight...");
@@ -781,16 +781,20 @@ _showInsightForKey: async function (sKey) {
     oModel.setProperty("/showEmpty", false);
     oModel.setProperty("/hasSelectionClass", "hasSelection");
     oModel.refresh(true);
- 
+
     try {
-        var oAiSummary = await this._fetchAISummary(oCard);
- 
+        // Fetch the ML forecast first (best-effort — returns null on failure
+        // or if the card has no forecast), then pass it into the AI summary
+        // call so the LLM can reason about current KPI + predicted trend together.
+        var oForecastData = await this._fetchForecastForCard(oCard);
+        var oAiSummary = await this._fetchAISummary(oCard, oForecastData);
+
         oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
         oModel.setProperty("/selectedInsight/title", oAiSummary.title || (oCard.title + " — " + oCard.statusText));
         oModel.setProperty("/selectedInsight/text", oAiSummary.summaryText || "No summary generated.");
         oModel.setProperty("/selectedInsight/recommendation", oAiSummary.recommendedAction || "");
         oModel.setProperty("/selectedInsight/icon", oMeta.icon);
- 
+
         if ((oAiSummary.severity || "").toUpperCase() === "CRITICAL") {
             oModel.setProperty("/selectedInsight/iconClass", "iconRed");
         } else if ((oAiSummary.severity || "").toUpperCase() === "WATCH" || (oAiSummary.severity || "").toUpperCase() === "MONITOR") {
@@ -803,18 +807,17 @@ _showInsightForKey: async function (sKey) {
         var sFallbackRecommendation = bIsGood ? oMeta.recommendationGood : oMeta.recommendationBad;
         var sFallbackText = oCard.title + " is currently " + oCard.value + oCard.unit +
             " (" + oCard.delta + "). " + oCard.footerRight + ".";
- 
+
         oModel.setProperty("/selectedInsight/subtitle", "Insight for selected KPI");
         oModel.setProperty("/selectedInsight/title", oCard.title + " — " + oCard.statusText);
         oModel.setProperty("/selectedInsight/text", sFallbackText);
         oModel.setProperty("/selectedInsight/recommendation", sFallbackRecommendation);
         oModel.setProperty("/selectedInsight.icon", oMeta.icon);
         oModel.setProperty("/selectedInsight/iconClass", bIsGood ? oMeta.iconClassGood : oMeta.iconClassBad);
-        
- 
-console.warn("AI summary unavailable. Using fallback insight.", err);
+
+        console.warn("AI summary unavailable. Using fallback insight.", err);
     }
- 
+
     oModel.refresh(true);
 },
 
@@ -984,6 +987,42 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
     var oDialog = oEvent.getSource().getParent();
     oDialog.close();
     oDialog.destroy(); // IMPORTANT (prevents duplicate dialogs)
-}
+},
+// NEW: builds the ML payload + calls the right predict action, returns a
+// normalized forecast object (or null if forecast isn't available/fails).
+_fetchForecastForCard: async function (oCard) {
+    if (!oCard.hasForecast) {
+        return null;
+    }
+
+    try {
+        var sAction = oCard.forecastType === "stock" ? "predictStock" : "predictDelivery";
+        var oPayload = oCard.forecastType === "stock"
+            ? this._buildStockPayload(oCard)
+            : this._buildDeliveryPayload(oCard);
+
+        var oResult = await this._fetchForecast(sAction, oPayload);
+
+        if (oCard.forecastType === "stock") {
+            var nShortage = Number(oResult?.prediction ?? 0);
+            return {
+                type: "stock",
+                predictedShortageQty: Number(nShortage.toFixed(2)),
+                riskLevel: nShortage > 0 ? "Shortage Expected" : "No Shortage"
+            };
+        }
+
+        var nDelay = Number(oResult?.prediction_delay_days ?? 0);
+        return {
+            type: "delivery",
+            predictedDelayDays: Number(nDelay.toFixed(1)),
+            riskLevel: nDelay > 2 ? "High Delay Risk" : "On-Time Delivery"
+        };
+    } catch (err) {
+        // Forecast is best-effort — AI summary should still work without it.
+        console.warn("Forecast unavailable for AI summary:", err.message);
+        return null;
+    }
+},
     });
 });

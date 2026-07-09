@@ -67,7 +67,8 @@ module.exports = cds.service.impl(async function () {
                 severity,
                 target,
                 plant,
-                additionalContext
+                additionalContext,
+                forecastData
             } = req.data;
 
             if (!kpiName || !kpiValue || !severity) {
@@ -81,7 +82,8 @@ module.exports = cds.service.impl(async function () {
                 severity,
                 target,
                 plant,
-                additionalContext
+                additionalContext,
+                forecastData
             });
         } catch (err) {
             handleError('getAISummary', err);
