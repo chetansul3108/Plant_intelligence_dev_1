@@ -132,7 +132,7 @@
                                                     icon="sap-icon://line-chart"
                                                     type="Transparent"
                                                     class="forecastTrigger"
-                                                    visible="{dashboardModel>hasForecast}"
+                                                    
                                                     press=".onForecastPress">
                                                     <customData>
                                                         <core:CustomData
