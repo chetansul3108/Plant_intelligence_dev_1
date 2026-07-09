@@ -363,7 +363,7 @@
  
 .aiSummarySubtitle {
     color: #8b96a5;
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     margin-bottom: 1.1rem;
 }
  
@@ -405,13 +405,13 @@
 }
  
 .aiInsightTitle {
-    font-size: 0.92rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #1a2233;
 }
  
 .aiInsightText {
-    font-size: 1.01rem;
+    font-size: 0.95rem;
     color: #6b7686;
     line-height: 1.5;
     margin-top: 0.25rem;
@@ -426,15 +426,15 @@
 }
  
 .aiRecommendLabel {
-    font-size: 0.65rem;
+    font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.04em;
-    color: #7c8798;
+    color: #000000;
     margin-bottom: 0.28rem;
 }
  
 .aiRecommendText {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: #2f3947;
     line-height: 1.45;
 }

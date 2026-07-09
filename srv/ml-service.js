@@ -15,18 +15,22 @@ module.exports = cds.service.impl(function () {
       trend: req.data.trend
     }
 
-    const response = await fetch('http://127.0.0.1:5000/predict/stock', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    try {
+      const response = await fetch('http://127.0.0.1:5000/predict/stock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
 
-    if (!response.ok) {
-      const err = await response.text()
-      req.error(500, `Stock prediction failed: ${err}`)
+      if (!response.ok) {
+        const err = await response.text()
+        return req.error(500, `Stock prediction failed: ${err}`)
+      }
+
+      return await response.json()
+    } catch (err) {
+      return req.error(500, `Could not reach Flask service: ${err.message}`)
     }
-
-    return await response.json()
   })
 
   this.on('predictDelivery', async (req) => {
@@ -50,18 +54,22 @@ module.exports = cds.service.impl(function () {
       Planned_Transit_Days: req.data.Planned_Transit_Days
     }
 
-    const response = await fetch('http://127.0.0.1:5000/predict/delivery', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    try {
+      const response = await fetch('http://127.0.0.1:5000/predict/delivery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
 
-    if (!response.ok) {
-      const err = await response.text()
-      req.error(500, `Delivery prediction failed: ${err}`)
+      if (!response.ok) {
+        const err = await response.text()
+        return req.error(500, `Delivery prediction failed: ${err}`)
+      }
+
+      return await response.json()
+    } catch (err) {
+      return req.error(500, `Could not reach Flask service: ${err.message}`)
     }
-
-    return await response.json()
   })
 
 })
