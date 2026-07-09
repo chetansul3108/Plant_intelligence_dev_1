@@ -15,23 +15,23 @@
                     number="{forecast>/prediction_delay_days}"
                     unit="Days"
                     emphasized="true"
-                    state="Error"/>
+                    state="{forecast>/statusState}" />
 
                 <!-- Label -->
                 <Text
                     text="Predicted Delivery Delay"
                     class="sapUiSmallMarginBottom"/>
 
-                <!-- Risk -->
+                <!-- Status -->
                 <ObjectStatus
-                    text="{forecast>/risk_status}"
-                    state="Error"
+                    text="{forecast>/statusText}"
+                    state="{forecast>/statusState}"
                     class="sapUiSmallMarginTop"/>
 
                 <!-- Message -->
                 <MessageStrip
-                    text="High delay expected. Take action."
-                    type="Error"
+                    text="{forecast>/messageText}"
+                    type="{forecast>/messageType}"
                     showIcon="true"
                     class="sapUiMediumMarginTop"/>
 

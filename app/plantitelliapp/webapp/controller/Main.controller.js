@@ -927,7 +927,10 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
         _showForecastDialog: function (oResult, sType) {
     var oView = this.getView();
 
-    var sFragmentName = "plant_intelligence_dev.fragment.StockForecastDialog";
+    // ✅ SWITCH FRAGMENT BASED ON TYPE
+    var sFragmentName = sType === "stock"
+        ? "plant_intelligence_dev.fragment.StockForecastDialog"
+        : "plant_intelligence_dev.fragment.DeliveryForecastDialog";
 
     Fragment.load({
         id: oView.getId(),
@@ -935,20 +938,39 @@ console.warn("AI summary unavailable. Using fallback insight.", err);
         controller: this
     }).then(function (oDialog) {
 
-        var iShortage = Number(oResult?.prediction ?? 0);
+        let oData = {};
 
-        // ✅ HANDLE LOGIC HERE (NOT IN XML)
-        var oData = {
-            prediction: iShortage.toFixed(2),
-            statusText: iShortage > 0 ? "Shortage Expected" : "No Shortage",
-            statusState: iShortage > 0 ? "Error" : "Success",
-            messageText: iShortage > 0
-                ? "Potential stock shortage detected. Replenishment required."
-                : "No shortage expected. Stock levels are sufficient.",
-            messageType: iShortage > 0 ? "Error" : "Success"
-        };
+        // ✅ STOCK LOGIC
+        if (sType === "stock") {
+            var iShortage = Number(oResult?.prediction ?? 0);
 
-        console.log("✅ STOCK DATA:", oData);
+            oData = {
+                prediction: iShortage.toFixed(2),
+                statusText: iShortage > 0 ? "Shortage Expected" : "No Shortage",
+                statusState: iShortage > 0 ? "Error" : "Success",
+                messageText: iShortage > 0
+                    ? "Potential stock shortage detected. Replenishment required."
+                    : "No shortage expected. Stock levels are sufficient.",
+                messageType: iShortage > 0 ? "Error" : "Success"
+            };
+        }
+
+        // ✅ DELIVERY LOGIC (NEW)
+        if (sType === "delivery") {
+            var fDelay = Number(oResult?.prediction_delay_days ?? 0);
+
+            oData = {
+                prediction_delay_days: fDelay.toFixed(1),
+                statusText: fDelay > 2 ? "High Delay Risk" : "On-Time Delivery",
+                statusState: fDelay > 2 ? "Error" : "Success",
+                messageText: fDelay > 2
+                    ? "High delay expected. Take action."
+                    : "Delivery is on track.",
+                messageType: fDelay > 2 ? "Error" : "Success"
+            };
+        }
+
+        console.log("✅ FINAL DATA:", oData);
 
         var oModel = new sap.ui.model.json.JSONModel(oData);
         oDialog.setModel(oModel, "forecast");
