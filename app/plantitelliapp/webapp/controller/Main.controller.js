@@ -823,37 +823,53 @@ _showInsightForKey: async function (sKey) {
 
         // ===================== FORECAST (MLService) =====================
 
-        onForecastPress: async function (oEvent) {
-            var sKey = oEvent.getSource().data("cardKey");
-            var oModel = this.getView().getModel("dashboardModel");
-            var aCards = oModel.getProperty("/cards");
-            var oCard = aCards.find(function (c) {
-                return c.key === sKey;
-            });
+       onForecastPress: async function (oEvent) {
 
-            if (!oCard) {
-                return;
-            }
+    var sKey = oEvent.getSource().data("cardKey");
+    var oModel = this.getView().getModel("dashboardModel");
+    var aCards = oModel.getProperty("/cards");
 
-            var oBusyDialog = new BusyDialog({ text: "Generating forecast..." });
-            oBusyDialog.open();
+    var oCard = aCards.find(function (c) {
+        return c.key === sKey;
+    });
 
-            try {
-                var oResult;
+    if (!oCard) {
+        return;
+    }
 
-                if (oCard.forecastType === "stock") {
-                    oResult = await this._fetchForecast("predictStock", this._buildStockPayload(oCard));
-                } else {
-                    oResult = await this._fetchForecast("predictDelivery", this._buildDeliveryPayload(oCard));
-                }
+    // ✅ 👉 ADD IT RIGHT HERE
+    if (!oCard.hasForecast) {
+        MessageToast.show("Forecast not available for this KPI");
+        return;
+    }
 
-                this._showForecastDialog(oResult, oCard.forecastType);
-            } catch (err) {
-                MessageBox.error("Forecast failed: " + err.message);
-            } finally {
-                oBusyDialog.close();
-            }
-        },
+    // ✅ ONLY VALID CARDS REACH HERE
+    var oBusyDialog = new sap.m.BusyDialog({ text: "Generating forecast..." });
+    oBusyDialog.open();
+
+    try {
+        var oResult;
+
+        if (oCard.forecastType === "stock") {
+            oResult = await this._fetchForecast(
+                "predictStock",
+                this._buildStockPayload(oCard)
+            );
+        } else {
+            oResult = await this._fetchForecast(
+                "predictDelivery",
+                this._buildDeliveryPayload(oCard)
+            );
+        }
+
+        this._showForecastDialog(oResult, oCard.forecastType);
+
+    } catch (err) {
+        sap.m.MessageBox.error("Forecast failed: " + err.message);
+    } finally {
+        oBusyDialog.close();
+    }
+},
 
         _fetchForecast: async function (sAction, oPayload) {
             var response = await fetch("/odata/v4/ml/" + sAction, {
