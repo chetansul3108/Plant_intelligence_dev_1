@@ -11,8 +11,24 @@ function sleep(ms) {
 }
 
 function buildPrompt(payload) {
+    var sForecastSection = "No predictive ML forecast is available for this KPI.";
+
+    if (payload.forecastData) {
+        var oForecast = payload.forecastData;
+        if (typeof oForecast === "string") {
+            try {
+                oForecast = JSON.parse(oForecast);
+            } catch (e) {
+                oForecast = null;
+            }
+        }
+        if (oForecast) {
+            sForecastSection = JSON.stringify(oForecast, null, 2);
+        }
+    }
+
     return `
-You are an expert SAP Manufacturing and Supply Chain Analytics consultant. Your task is to analyze the KPI together with all supporting data provided. Do not simply summarize the KPI. Think like a senior operations analyst. Analyze the data deeply and determine what the KPI is measuring, performance health, business reasons, bottlenecks, risks, impact, and actionable recommendations.
+You are an expert SAP Manufacturing and Supply Chain Analytics consultant. Your task is to analyze the KPI together with all supporting data AND the predictive ML forecast provided. Do not simply summarize the KPI. Think like a senior operations analyst who blends current performance with the forward-looking prediction to judge health, root cause, risk, and next actions.
 
 Return ONLY valid JSON in this exact format:
 {
@@ -20,16 +36,18 @@ Return ONLY valid JSON in this exact format:
   "severity": "CRITICAL | HIGH | MEDIUM | LOW | INFO",
   "status": "Healthy | Warning | Critical",
   "summaryText": "Core insights structured exactly as 4 to 5 distinct bullet points.",
-  "rootCause": "Most likely reason based on the supplied data.",
-  "businessImpact": "Operational or financial impact.",
-  "recommendedAction": "Specific actions to improve the KPI.",
-  "warning": "Potential future risk if ignored. Empty string if none.",
+  "rootCause": "Most likely reason based on the supplied data and forecast.",
+  "businessImpact": "Operational or financial impact, factoring in the forecast trend.",
+  "recommendedAction": "Specific actions to improve the KPI, informed by the forecast direction.",
+  "warning": "Potential future risk if ignored, using the forecast as a leading indicator. Empty string if none.",
   "opportunity": "Suggested optimization opportunity. Empty string if none."
 }
 
 Analysis Rules:
 - CRITICAL FORMAT RULE: The "summaryText" value MUST be formatted strictly as 4 to 5 distinct bullet points using standard dashes (e.g., "- Point 1\\n- Point 2\\n- Point 3..."). Do not write continuous paragraphs.
-- Base every conclusion ONLY on the supplied data. Do not invent facts.
+- Base every conclusion ONLY on the supplied data and forecast. Do not invent facts.
+- If the forecast indicates deteriorating conditions (e.g. shortage expected, high delay risk) even though the current KPI value looks fine, call that out explicitly — treat the forecast as a leading indicator, not just a footnote.
+- If the forecast agrees with current performance, use it to reinforce confidence rather than repeating it verbatim.
 - Keep the language concise, professional, and suitable for an SAP executive dashboard.
 - Do not add markdown backticks (\`\`\`) around the JSON response.
 
@@ -42,6 +60,9 @@ Severity: ${payload.severity || ''}
 Plant: ${payload.plant || ''}
 Additional Context: ${payload.additionalContext || ''}
 Supporting KPI Dataset: ${JSON.stringify(payload.data || [], null, 2)}
+
+Predictive ML Forecast Output (leading indicator — weigh this heavily in rootCause, recommendedAction and warning):
+${sForecastSection}
 `;
 }
 
