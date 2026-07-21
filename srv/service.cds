@@ -1,100 +1,29 @@
-using { cuid } from '@sap/cds/common';
+using { transit.db as db } from '../db/schema';
 
 @path: '/transit-service'
 service TransitService {
 
-    action getSalesOrdersInTransit() returns array of SalesOrdersInTransitItem;
-    action getOnTimeDelivery() returns array of OnTimeDeliveryItem;
-    action getStockShortage() returns array of StockShortageItem;
-    action getPlannedOrderSchedule() returns array of PlannedOrderItem;
-    action getSalesToPayment() returns array of SalesToPaymentItem;
-    action getMaterialVH() returns array of MaterialVHItem;
-    action getShippingPointVH() returns array of ShippingPointVHItem;
-    action getCustomerVH() returns array of CustomerVHItem;
+    entity SalesOrdersInTransit as projection on db.SalesOrdersInTransit;
+    entity OnTimeDelivery as projection on db.OnTimeDelivery;
+    entity StockShortage as projection on db.StockShortage;
+    entity PlannedOrderSchedule as projection on db.PlannedOrderSchedule;
+    entity SalesToPayment as projection on db.SalesToPayment;
 
-    type SalesOrdersInTransitItem {
-        SalesOrder             : String;
-        Delivery               : String;
-        Shipment               : String;
-        Carrier                : String;
-        Route                  : String;
-        Customer               : String;
-        DispatchDate           : String;
-        ETA                    : String;
-        RequestedDeliveryDate  : String;
-        CurrentStatus          : String;
-    }
+    entity MaterialVH as projection on db.MaterialVH;
+    entity ShippingPointVH as projection on db.ShippingPointVH;
+    entity CustomerVH as projection on db.CustomerVH;
 
-    type OnTimeDeliveryItem {
-        SalesOrder              : String;
-        Delivery                : String;
-        Customer                : String;
-        Material                : String;
-        PlannedDeliveryDate     : String;
-        ActualGIDeliveryDate    : String;
-        Quantity                : String;
-        OrderedQty              : String;
-        ActualDeliveryQuantity  : String;
-        Plant                   : String;
-        ShippingPoint           : String;
-    }
+    action syncSalesOrdersInTransit() returns String;
+    action syncOnTimeDelivery() returns String;
+    action syncStockShortage() returns String;
+    action syncPlannedOrderSchedule() returns String;
+    action syncSalesToPayment() returns String;
+    action syncMaterialVH() returns String;
+    action syncShippingPointVH() returns String;
+    action syncCustomerVH() returns String;
+    action syncAllData() returns String;
 
-    type StockShortageItem {
-        Material         : String;
-        Plant            : String;
-        StorageLocation  : String;
-        AvailableQty     : String;
-        RequirementQty   : String;
-        ShortageQty      : String;
-        StandardPrice    : String;
-        ShortageValue    : String;
-        RequirementDate  : String;
-        MRPController    : String;
-    }
-
-    type PlannedOrderItem {
-        PlannedOrder      : String;
-        Material          : String;
-        Plant             : String;
-        BasicStartDate    : String;
-        BasicFinishDate   : String;
-        ScheduledDate     : String;
-        RequiredDate      : String;
-        Quantity          : String;
-        Status            : String;
-    }
-
-    type SalesToPaymentItem {
-        SalesOrder            : String;
-        BillingDocument       : String;
-        OrderCreationDate     : String;
-        GoodsIssueDate        : String;
-        InvoiceDate           : String;
-        PaymentStatus         : String;
-        NetAmount             : String;
-        Customer              : String;
-        DueDate               : String;
-        ClearingDate          : String;
-        DaysOrderToGI         : Integer;
-        DaysGIToInvoice       : Integer;
-        DaysInvoiceToPayment  : Integer;
-    }
-
-    type MaterialVHItem {
-        Material             : String;
-        MaterialDescription  : String;
-    }
-
-    type ShippingPointVHItem {
-        ShippingPoint             : String;
-        ShippingPointDescription  : String;
-    }
-
-    type CustomerVHItem {
-        Customer      : String;
-        CustomerName  : String;
-    }
-        action getAISummary(
+    action getAISummary(
         kpiName           : String,
         kpiValue          : String,
         unit              : String,
@@ -102,14 +31,14 @@ service TransitService {
         target            : String,
         plant             : String,
         additionalContext : String,
-        forecastData: String
+        forecastData      : LargeString
     ) returns AISummaryItem;
 
     type AISummaryItem {
         title              : String;
         severity           : String;
-        summaryText        : String;
-        recommendedAction  : String;
+        summaryText        : LargeString;
+        recommendedAction  : LargeString;
         generatedAt        : String;
     }
 }
