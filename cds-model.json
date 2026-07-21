@@ -1,0 +1,2385 @@
+{
+  "namespace": "transit.db",
+  "definitions": {
+    "transit.db.SalesOrdersInTransit": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "SalesOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Delivery": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Shipment": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Carrier": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "Route": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Customer": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "DispatchDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ETA": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "RequestedDeliveryDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "CurrentStatus": {
+          "type": "cds.String",
+          "length": 80
+        }
+      }
+    },
+    "transit.db.OnTimeDelivery": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "SalesOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Delivery": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Customer": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "PlannedDeliveryDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ActualGIDeliveryDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "Quantity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "OrderedQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "ActualDeliveryQuantity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Plant": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ShippingPoint": {
+          "type": "cds.String",
+          "length": 20
+        }
+      }
+    },
+    "transit.db.StockShortage": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Plant": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "StorageLocation": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "RequirementDate": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "AvailableQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "RequirementQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "ShortageQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "StandardPrice": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "ShortageValue": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "MRPController": {
+          "type": "cds.String",
+          "length": 20
+        }
+      }
+    },
+    "transit.db.PlannedOrderSchedule": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "PlannedOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Plant": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "BasicStartDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "BasicFinishDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ScheduledDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "RequiredDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "Quantity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Status": {
+          "type": "cds.String",
+          "length": 40
+        }
+      }
+    },
+    "transit.db.SalesToPayment": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "SalesOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "BillingDocument": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "OrderCreationDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "GoodsIssueDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "InvoiceDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "PaymentStatus": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "NetAmount": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Customer": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "DueDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ClearingDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "DaysOrderToGI": {
+          "type": "cds.Integer"
+        },
+        "DaysGIToInvoice": {
+          "type": "cds.Integer"
+        },
+        "DaysInvoiceToPayment": {
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "transit.db.MaterialVH": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "MaterialDescription": {
+          "type": "cds.String",
+          "length": 255
+        }
+      }
+    },
+    "transit.db.ShippingPointVH": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "ShippingPoint": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "ShippingPointDescription": {
+          "type": "cds.String",
+          "length": 255
+        }
+      }
+    },
+    "transit.db.CustomerVH": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "Customer": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "CustomerName": {
+          "type": "cds.String",
+          "length": 255
+        }
+      }
+    },
+    "TransitService": {
+      "@source": "srv/service.cds",
+      "kind": "service",
+      "@path": "/transit-service"
+    },
+    "TransitService.SalesOrdersInTransit": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "transit.db.SalesOrdersInTransit"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "SalesOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Delivery": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Shipment": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Carrier": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "Route": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Customer": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "DispatchDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ETA": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "RequestedDeliveryDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "CurrentStatus": {
+          "type": "cds.String",
+          "length": 80
+        }
+      }
+    },
+    "TransitService.OnTimeDelivery": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "transit.db.OnTimeDelivery"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "SalesOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Delivery": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Customer": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "PlannedDeliveryDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ActualGIDeliveryDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "Quantity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "OrderedQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "ActualDeliveryQuantity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Plant": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ShippingPoint": {
+          "type": "cds.String",
+          "length": 20
+        }
+      }
+    },
+    "TransitService.StockShortage": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "transit.db.StockShortage"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Plant": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "StorageLocation": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "RequirementDate": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "AvailableQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "RequirementQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "ShortageQty": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "StandardPrice": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "ShortageValue": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "MRPController": {
+          "type": "cds.String",
+          "length": 20
+        }
+      }
+    },
+    "TransitService.PlannedOrderSchedule": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "transit.db.PlannedOrderSchedule"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "PlannedOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Material": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "Plant": {
+          "key": true,
+          "type": "cds.String",
+          "length": 20
+        },
+        "BasicStartDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "BasicFinishDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ScheduledDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "RequiredDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "Quantity": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Status": {
+          "type": "cds.String",
+          "length": 40
+        }
+      }
+    },
+    "TransitService.SalesToPayment": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "transit.db.SalesToPayment"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "SalesOrder": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "BillingDocument": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40
+        },
+        "OrderCreationDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "GoodsIssueDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "InvoiceDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "PaymentStatus": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "NetAmount": {
+          "type": "cds.String",
+          "length": 40
+        },
+        "Customer": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "DueDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "ClearingDate": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "DaysOrderToGI": {
+          "type": "cds.Integer"
+        },
+        "DaysGIToInvoice": {
+          "type": "cds.Integer"
+        },
+        "DaysInvoiceToPayment": {
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "TransitService.getMaterialVH": {
+      "kind": "action",
+      "returns": {
+        "items": {
+          "type": "TransitService.MaterialVHItem"
+        }
+      }
+    },
+    "TransitService.getShippingPointVH": {
+      "kind": "action",
+      "returns": {
+        "items": {
+          "type": "TransitService.ShippingPointVHItem"
+        }
+      }
+    },
+    "TransitService.getCustomerVH": {
+      "kind": "action",
+      "returns": {
+        "items": {
+          "type": "TransitService.CustomerVHItem"
+        }
+      }
+    },
+    "TransitService.getStoredSalesOrdersInTransit": {
+      "kind": "action",
+      "returns": {
+        "items": {
+          "type": "TransitService.SalesOrdersInTransitItem"
+        }
+      }
+    },
+    "TransitService.syncSalesOrdersInTransit": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncOnTimeDelivery": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncStockShortage": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncPlannedOrderSchedule": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncSalesToPayment": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncMaterialVH": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncShippingPointVH": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncCustomerVH": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.syncAllData": {
+      "kind": "action",
+      "returns": {
+        "type": "cds.String"
+      }
+    },
+    "TransitService.getAISummary": {
+      "kind": "action",
+      "params": {
+        "kpiName": {
+          "type": "cds.String"
+        },
+        "kpiValue": {
+          "type": "cds.String"
+        },
+        "unit": {
+          "type": "cds.String"
+        },
+        "severity": {
+          "type": "cds.String"
+        },
+        "target": {
+          "type": "cds.String"
+        },
+        "plant": {
+          "type": "cds.String"
+        },
+        "additionalContext": {
+          "type": "cds.String"
+        },
+        "forecastData": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "type": "TransitService.AISummaryItem"
+      }
+    },
+    "TransitService.SalesOrdersInTransitItem": {
+      "kind": "type",
+      "elements": {
+        "SalesOrder": {
+          "type": "cds.String"
+        },
+        "Delivery": {
+          "type": "cds.String"
+        },
+        "Shipment": {
+          "type": "cds.String"
+        },
+        "Carrier": {
+          "type": "cds.String"
+        },
+        "Route": {
+          "type": "cds.String"
+        },
+        "Customer": {
+          "type": "cds.String"
+        },
+        "DispatchDate": {
+          "type": "cds.String"
+        },
+        "ETA": {
+          "type": "cds.String"
+        },
+        "RequestedDeliveryDate": {
+          "type": "cds.String"
+        },
+        "CurrentStatus": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "TransitService.MaterialVHItem": {
+      "kind": "type",
+      "elements": {
+        "Material": {
+          "type": "cds.String"
+        },
+        "MaterialDescription": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "TransitService.ShippingPointVHItem": {
+      "kind": "type",
+      "elements": {
+        "ShippingPoint": {
+          "type": "cds.String"
+        },
+        "ShippingPointDescription": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "TransitService.CustomerVHItem": {
+      "kind": "type",
+      "elements": {
+        "Customer": {
+          "type": "cds.String"
+        },
+        "CustomerName": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "TransitService.AISummaryItem": {
+      "kind": "type",
+      "elements": {
+        "title": {
+          "type": "cds.String"
+        },
+        "severity": {
+          "type": "cds.String"
+        },
+        "summaryText": {
+          "type": "cds.String"
+        },
+        "recommendedAction": {
+          "type": "cds.String"
+        },
+        "generatedAt": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "MLService": {
+      "@source": "srv/ml-service.cds",
+      "kind": "service"
+    },
+    "MLService.predictStock": {
+      "kind": "action",
+      "params": {
+        "month_sin": {
+          "type": "cds.Decimal"
+        },
+        "month_cos": {
+          "type": "cds.Decimal"
+        },
+        "lag_1": {
+          "type": "cds.Decimal"
+        },
+        "lag_2": {
+          "type": "cds.Decimal"
+        },
+        "lag_3": {
+          "type": "cds.Decimal"
+        },
+        "lag_6": {
+          "type": "cds.Decimal"
+        },
+        "rolling_mean_3": {
+          "type": "cds.Decimal"
+        },
+        "rolling_std_3": {
+          "type": "cds.Decimal"
+        },
+        "trend": {
+          "type": "cds.Integer"
+        }
+      },
+      "returns": {
+        "type": "StockPrediction"
+      }
+    },
+    "MLService.predictDelivery": {
+      "kind": "action",
+      "params": {
+        "ShippingPoint": {
+          "type": "cds.String"
+        },
+        "SalesOrganization": {
+          "type": "cds.String"
+        },
+        "Plant": {
+          "type": "cds.String"
+        },
+        "StorageLocation": {
+          "type": "cds.String"
+        },
+        "SoldToParty": {
+          "type": "cds.String"
+        },
+        "ShipToParty": {
+          "type": "cds.String"
+        },
+        "Material": {
+          "type": "cds.String"
+        },
+        "Product": {
+          "type": "cds.String"
+        },
+        "BaseUnit": {
+          "type": "cds.String"
+        },
+        "MaterialGroup": {
+          "type": "cds.String"
+        },
+        "ItemRoute": {
+          "type": "cds.String"
+        },
+        "DeliveryPriority": {
+          "type": "cds.String"
+        },
+        "ActualDeliveryQuantity": {
+          "type": "cds.Decimal"
+        },
+        "DeliveryQuantityUnit": {
+          "type": "cds.String"
+        },
+        "Creation_DayOfWeek": {
+          "type": "cds.Integer"
+        },
+        "Creation_Month": {
+          "type": "cds.Integer"
+        },
+        "Planned_Transit_Days": {
+          "type": "cds.Integer"
+        }
+      },
+      "returns": {
+        "type": "DeliveryPrediction"
+      }
+    },
+    "StockPrediction": {
+      "kind": "type",
+      "elements": {
+        "model": {
+          "type": "cds.String"
+        },
+        "prediction": {
+          "type": "cds.Decimal"
+        }
+      }
+    },
+    "DeliveryPrediction": {
+      "kind": "type",
+      "elements": {
+        "model": {
+          "type": "cds.String"
+        },
+        "prediction_delay_days": {
+          "type": "cds.Decimal"
+        },
+        "risk_status": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "Language": {
+      "kind": "type",
+      "@title": "{i18n>Language}",
+      "@description": "{i18n>LanguageCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Languages",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Currency": {
+      "kind": "type",
+      "@title": "{i18n>Currency}",
+      "@description": "{i18n>CurrencyCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Currencies",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Country": {
+      "kind": "type",
+      "@title": "{i18n>Country}",
+      "@description": "{i18n>CountryCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Countries",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Timezone": {
+      "kind": "type",
+      "type": "cds.Association",
+      "target": "sap.common.Timezones",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "sap.common": {
+      "kind": "context"
+    },
+    "sap.common.Locale": {
+      "kind": "type",
+      "@title": "{i18n>LanguageCode}",
+      "type": "cds.String",
+      "length": 14
+    },
+    "sap.common.Languages": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Countries": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Currencies": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "minorUnit": {
+          "@title": "{i18n>CurrencyMinorUnit}",
+          "type": "cds.Int16"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Timezones": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Timezones.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Timezones.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.CodeList": {
+      "kind": "aspect",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        }
+      }
+    },
+    "sap.common.TextsAspect": {
+      "kind": "aspect",
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        }
+      }
+    },
+    "sap.common.FlowHistory": {
+      "kind": "aspect",
+      "@cds.persistence.skip": "if-unused",
+      "elements": {
+        "transitions_": {
+          "@odata.draft.enabled": false,
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "targetAspect": {
+            "elements": {
+              "timestamp": {
+                "@cds.on.insert": {
+                  "=": "$now"
+                },
+                "@UI.HiddenFilter": true,
+                "@UI.ExcludeFromNavigationContext": true,
+                "@Core.Immutable": true,
+                "@title": "{i18n>CreatedAt}",
+                "@readonly": true,
+                "key": true,
+                "type": {
+                  "ref": [
+                    "managed",
+                    "createdAt"
+                  ]
+                }
+              },
+              "user": {
+                "@cds.on.insert": {
+                  "=": "$user"
+                },
+                "@UI.HiddenFilter": true,
+                "@UI.ExcludeFromNavigationContext": true,
+                "@Core.Immutable": true,
+                "@title": "{i18n>CreatedBy}",
+                "@readonly": true,
+                "@description": "{i18n>UserID.Description}",
+                "type": {
+                  "ref": [
+                    "managed",
+                    "createdBy"
+                  ]
+                },
+                "length": 255
+              },
+              "status": {
+                "type": "cds.String"
+              },
+              "comment": {
+                "type": "cds.String"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cuid": {
+      "kind": "aspect",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        }
+      }
+    },
+    "managed": {
+      "kind": "aspect",
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        }
+      }
+    },
+    "temporal": {
+      "kind": "aspect",
+      "elements": {
+        "validFrom": {
+          "@cds.valid.from": true,
+          "type": "cds.Timestamp"
+        },
+        "validTo": {
+          "@cds.valid.to": true,
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "User": {
+      "kind": "type",
+      "@title": "{i18n>UserID}",
+      "@description": "{i18n>UserID.Description}",
+      "type": "cds.String",
+      "length": 255
+    },
+    "sap.common.Languages.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        }
+      }
+    },
+    "sap.common.Countries.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Currencies.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Timezones.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v6.9.3",
+    "compilerVersion": "6.9.3",
+    "compilerCsnFlavor": "inferred",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}
