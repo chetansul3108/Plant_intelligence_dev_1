@@ -2,6 +2,7 @@
   "name": "plant_intelli_2",
   "version": "1.0.0",
   "dependencies": {
+    "@cap-js/hana": "^2.8.0",
     "@sap-cloud-sdk/http-client": "^4.7.0",
     "@sap-cloud-sdk/resilience": "^4.7.0",
     "@sap/cds": "^9",

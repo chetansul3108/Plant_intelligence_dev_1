@@ -1,10 +1,11 @@
 'use strict';
 
 require('dotenv').config();
-const axios = require('axios');
+const { executeHttpRequest } = require('@sap-cloud-sdk/http-client');
 
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
+const AICORE_DEPLOYMENT_ID = process.env.AICORE_DEPLOYMENT_ID || 'd01b4f25c36edc95'; // gpt-4o
+const AICORE_API_VERSION = process.env.AICORE_API_VERSION || '2024-02-01';
+const AICORE_RESOURCE_GROUP = process.env.AICORE_RESOURCE_GROUP || 'default';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -72,7 +73,7 @@ function extractContent(data) {
 
 function parseJsonSafely(content, payload) {
     if (!content) {
-        throw new Error('No AI content returned from Groq');
+        throw new Error('No AI content returned from AI Core');
     }
 
     const cleaned = String(content).trim();
@@ -90,7 +91,7 @@ function parseJsonSafely(content, payload) {
         }
     }
 
-    // Fallback object matching the new schema
+    // Fallback object matching the schema
     return {
         title: `${payload.kpiName || 'KPI'} - ${payload.severity || 'MONITOR'}`,
         severity: payload.severity || 'INFO',
@@ -104,19 +105,28 @@ function parseJsonSafely(content, payload) {
     };
 }
 
-async function callGroqWithRetry(requestBody, headers, retries = 2) {
+async function callAiCoreWithRetry(requestData, retries = 2) {
     let lastError;
 
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
-            const response = await axios.post(GROQ_URL, requestBody, {
-                headers,
-                timeout: 45000
-            });
+            const response = await executeHttpRequest(
+                { destinationName: 'aicore' },
+                {
+                    method: 'POST',
+                    url: `/v2/inference/deployments/${AICORE_DEPLOYMENT_ID}/chat/completions?api-version=${AICORE_API_VERSION}`,
+                    headers: {
+                        'AI-Resource-Group': AICORE_RESOURCE_GROUP,
+                        'Content-Type': 'application/json'
+                    },
+                    data: requestData,
+                    timeout: 45000
+                }
+            );
 
             const content = extractContent(response.data);
             if (!content) {
-                throw new Error('No AI content returned from Groq');
+                throw new Error('No AI content returned from AI Core');
             }
 
             return response;
@@ -137,37 +147,25 @@ async function callGroqWithRetry(requestBody, headers, retries = 2) {
 }
 
 async function getAISummary(payload) {
-    const apiKey = (process.env.GROQ_API_KEY || '').trim();
-
-    if (!apiKey) {
-        throw new Error('Missing GROQ_API_KEY');
-    }
-
-    const requestBody = {
-        model: GROQ_MODEL,
-        temperature: 0.2, 
-        max_tokens: 800, 
+    const requestData = {
         messages: [
             {
                 role: 'system',
-                content: 'You generate executive SAP dashboard elements. You strictly format summaryText as 4 to 5 bullet points using newlines and dashes. You output valid JSON.'
+                content: 'You generate executive SAP dashboard elements. You strictly format summaryText as 4 to 5 bullet points using newlines and dashes. You output valid JSON only, with no markdown fencing.'
             },
             {
                 role: 'user',
                 content: buildPrompt(payload)
             }
         ],
+        temperature: 0.2,
+        max_tokens: 800,
         response_format: { type: 'json_object' }
-    };
-
-    const headers = {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
     };
 
     let response;
     try {
-        response = await callGroqWithRetry(requestBody, headers, 2);
+        response = await callAiCoreWithRetry(requestData, 2);
     } catch (err) {
         if (err.response) {
             const status = err.response.status;
@@ -192,8 +190,8 @@ async function getAISummary(payload) {
         opportunity: parsed.opportunity,
         generatedAt: new Date().toISOString(),
         source: 'AI',
-        provider: 'Groq',
-        model: GROQ_MODEL
+        provider: 'AICore',
+        model: `AzureOpenAI:${AICORE_DEPLOYMENT_ID}`
     };
 }
 
